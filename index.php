@@ -9,7 +9,7 @@
 
   <?php
 
-     in_array('mod_rewrite', apache_get_modules());
+     var_dump(apache_get_modules());
 
   ?>
 </body>
