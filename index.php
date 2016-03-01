@@ -6,5 +6,11 @@
 <body>
   <p>A Computer Science dissertation project.</p>
   <a href="#">Example API call()</a>
+
+  <?php
+
+     in_array('mod_rewrite', apache_get_modules());
+
+  ?>
 </body>
 </html>
