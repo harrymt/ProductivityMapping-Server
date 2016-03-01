@@ -28,9 +28,9 @@ class MyAPI extends API
     /**
      * Example of an Endpoint
      */
-     public function example() {
+     public function getInfo() {
         if ($this->method == 'GET') {
-            return "Your name is "; //. $this->User->name;
+            return "OK The current time is " . $_SERVER['REQUEST_TIME']; //. $this->User->name;
         } else {
             return "Only accepts GET requests";
         }

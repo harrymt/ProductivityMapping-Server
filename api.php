@@ -7,6 +7,8 @@
       $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
   }
 
+  // api.php?request=example
+
   try {
       $API = new MyAPI($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);
       echo $API->processAPI();
