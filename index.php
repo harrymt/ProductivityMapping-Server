@@ -4,6 +4,6 @@
   <title></title>
 </head>
 <body>
-  <p>Hello everyone!
+  <p>A Computer Science Dissertation project</p>
 </body>
 </html>
