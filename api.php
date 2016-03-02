@@ -7,10 +7,12 @@
       $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
   }
 
-  // api.php?request=example
+  // var_dump($_SERVER);
+
+  $request = $_SERVER['PATH_INFO']; // "/v1/status/time"
 
   try {
-      $API = new MyAPI($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);
+      $API = new MyAPI($request, $_SERVER['HTTP_ORIGIN']);
       echo $API->processAPI();
   } catch (Exception $e) {
       echo json_encode(Array('error' => $e->getMessage()));

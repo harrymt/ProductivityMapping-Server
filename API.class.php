@@ -13,12 +13,6 @@ abstract class API
      */
     protected $endpoint = '';
     /**
-     * Property: verb
-     * An optional additional descriptor about the endpoint, used for things that can
-     * not be handled by the basic methods. eg: /files/process
-     */
-    protected $verb = '';
-    /**
      * Property: args
      * Any additional URI components after the endpoint and verb have been removed, in our
      * case, an integer ID for the resource. eg: /<endpoint>/<verb>/<arg0>/<arg1>
@@ -30,6 +24,11 @@ abstract class API
      * Stores the input of the PUT request
      */
     protected $file = Null;
+     /**
+     * Property: api_version
+     * States what version of the API we are using
+     */
+    protected $api_version = '';
 
     /**
      * Constructor: __construct
@@ -40,13 +39,13 @@ abstract class API
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
-        $this->args = explode('/', rtrim($request, '/'));
-        $this->endpoint = array_shift($this->args);
+        // $request: "/v1/status/time"
+        $this->args = explode('/', trim($request, '/')); // atm set to ["v1", "status", "time"]
+        $this->api_version = array_shift($this->args); // "v1"
+        $this->endpoint = array_shift($this->args); // "status"
+        // Now $this->args is set to ["time"]
 
-        if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
-            $this->verb = array_shift($this->args);
-        }
-
+        // See if its a POST (DELETE) or PUT, otherwise its a GET
         $this->method = $_SERVER['REQUEST_METHOD'];
         if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
             if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
@@ -59,26 +58,30 @@ abstract class API
         }
 
         switch($this->method) {
-        case 'DELETE':
-        case 'POST':
-            $this->request = $this->_cleanInputs($_POST);
-            break;
-        case 'GET':
-            $this->request = $this->_cleanInputs($_GET);
-            break;
-        case 'PUT':
-            $this->request = $this->_cleanInputs($_GET);
-            $this->file = file_get_contents("php://input");
-            break;
-        default:
-            $this->_response('Invalid Method', 405);
-            break;
+            case 'DELETE': // Same as POST
+            case 'POST':
+                $this->request = $this->_cleanInputs($_POST);
+                break;
+            case 'GET':
+                $this->request = $this->_cleanInputs($_GET);
+                break;
+            case 'PUT':
+                $this->request = $this->_cleanInputs($_GET);
+                $this->file = file_get_contents("php://input");
+                break;
+            default:
+                $this->_response('Invalid Method', 405);
+                break;
         }
     }
 
     public function processAPI() {
+        // Checks to see if api endpoint exists
         if (method_exists($this, $this->endpoint)) {
-            return $this->_response($this->{$this->endpoint}($this->args));
+            $function_name = $this->endpoint;
+            $function_args = $this->args;
+            $function_return_value = $this->{$function_name}($function_args);
+            return $this->_response($function_return_value);
         }
 
         return $this->_response("No Endpoint: $this->endpoint" , 404);
