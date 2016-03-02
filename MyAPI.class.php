@@ -5,8 +5,6 @@ require_once 'DatabaseAdapater.class.php';
 
 class MyAPI extends API
 {
-    protected $User;
-
     public function __construct($query_string, $api_endpoint) {
         parent::__construct($query_string, $api_endpoint);
     }
@@ -24,19 +22,22 @@ class MyAPI extends API
     public function status($arguments) {
         if ($this->method == 'GET') {
 
-            //
-            // /status/date/
-            //
-            if($arguments >= 1 && $arguments[0] == "date") {
-                date_default_timezone_set('Europe/London'); // set default time zone
-                return new Response_Wrapper("The current date is " . date("Y-m-d"));
-            }
+            if($arguments >= 1) {
 
-            //
-            // /status/time/
-            //
-            if($arguments >= 1 && $arguments[0] == "time") {
-                return new Response_Wrapper("The current time is " . time());
+                //
+                // /status/date/
+                //
+                if($arguments[0] == "date") {
+                    date_default_timezone_set('Europe/London'); // set default time zone
+                    return new Response_Wrapper("The current date is " . date("Y-m-d"));
+                }
+
+                //
+                // /status/time/
+                //
+                if($arguments[0] == "time") {
+                    return new Response_Wrapper("The current time is " . time());
+                }
             }
 
             //
