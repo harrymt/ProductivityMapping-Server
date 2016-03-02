@@ -113,6 +113,20 @@ abstract class API
         );
         return ($status[$code])?$status[$code]:$status[500];
     }
+
+    /**
+     * Converts a string to a numeric value.
+     *
+     * @param  String $str The String value to convert.
+     * @return int or float Output value, can be int or float.
+     */
+    public function get_numeric($str) {
+      if (is_numeric($str)) {
+        return $str + 0;
+      }
+      return 0;
+    }
+
 }
 
 

@@ -1,6 +1,8 @@
 <?php
 
 require_once 'API.class.php';
+require_once 'DatabaseAdapater.class.php';
+
 class MyAPI extends API
 {
     protected $User;
@@ -49,39 +51,47 @@ class MyAPI extends API
 
 
     /**
-     * Gets general stats
+     * Get popular keywords
      *
-     * /stats/zones/ # number of zones,
-     * /stats/zones/
-     * /stats/apps/
-     * /stats/keywords/
-     * /stats/users/
+     * GET /keywords/number/
+     * GET /keywords/number/lat/lng/radius/
      *
      */
-    public function stats($arguments) {
+    public function keywords($arguments) {
         if ($this->method == 'GET') {
 
             //
-            // /status/date/
+            // /keywords/number/lat/lng/radius/
             //
-            if($arguments >= 1 && $arguments[0] == "date") {
-                date_default_timezone_set('Europe/London'); // set default time zone
-                return "OK The current date is " . date("Y-m-d");
+            if($arguments >= 4 && is_numeric($arguments[0])
+                && is_numeric($arguments[1]) // lat
+                && is_numeric($arguments[2]) // lng
+                && is_numeric($arguments[3]) // radius
+                ) {
+
+                $adapter = new DatabaseAdapater();
+                $number = $this->get_numeric($arguments[0]);
+                $lat = $this->get_numeric($arguments[1]);
+                $lng = $this->get_numeric($arguments[2]);
+                $radius = $this->get_numeric($arguments[3]);
+                return new Response_Wrapper($adapter->getKeywordsNearLocation($number, $lat, $lng, $radius));
             }
 
             //
-            // /status/time/
+            // /keywords/number/
             //
-            if($arguments >= 1 && $arguments[0] == "time") {
-                return "OK The current time is " . time();
+            if($arguments >= 1 && is_numeric($arguments[0])) {
+                $adapter = new DatabaseAdapater();
+                $number = $this->get_numeric($arguments[0]);
+                return new Response_Wrapper($adapter->getKeywords($number));
             }
 
             //
-            // /status/
+            // /keywords/
             //
-            return "OK The general status is fine.";
+            return new Response_Wrapper("Please provide a number /keywords/number/", 405);
         } else {
-            return "BAD Only accepts GET requests";
+            return new Response_Wrapper("Only accepts GET requests", 405);
         }
     }
  }
