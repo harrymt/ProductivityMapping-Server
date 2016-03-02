@@ -10,13 +10,31 @@ class MyAPI extends API
     }
 
     /**
-     * Example of an Endpoint
+     * Gets the status of the API, returns OK or BAD.
+     * Can be used as a test call to see if API is working.
+     *
+     * /status/date/
+     * /status/time/
+     * /status/time/
      */
-     public function getInfo() {
+     public function status($arguments) {
         if ($this->method == 'GET') {
-            return "OK The current time is " . $_SERVER['REQUEST_TIME']; //. $this->User->name;
+
+            // status/date
+            if($arguments >= 1 && $arguments[0] == "date") {
+                date_default_timezone_set('Europe/London'); // set default time zone
+                return "OK The current date is " . date("Y-m-d");
+            }
+
+            // status/time
+            if($arguments >= 1 && $arguments[0] == "time") {
+                return "OK The current time is " . time();
+            }
+
+            // status/
+            return "OK The general status is fine.";
         } else {
-            return "Only accepts GET requests";
+            return "BAD Only accepts GET requests";
         }
      }
  }
