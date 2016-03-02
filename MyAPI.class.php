@@ -9,34 +9,81 @@ class MyAPI extends API
         parent::__construct($query_string, $api_endpoint);
     }
 
+
+
     /**
      * Gets the status of the API, returns OK or BAD.
      * Can be used as a test call to see if API is working.
      *
-     * /status/date/
-     * /status/time/
-     * /status/time/
+     * GET /status/
+     * GET /status/date/
+     * GET /status/time/
      */
-     public function status($arguments) {
+    public function status($arguments) {
         if ($this->method == 'GET') {
 
-            // status/date
+            //
+            // /status/date/
+            //
+            if($arguments >= 1 && $arguments[0] == "date") {
+                date_default_timezone_set('Europe/London'); // set default time zone
+                return new Response_Wrapper("The current date is " . date("Y-m-d"));
+            }
+
+            //
+            // /status/time/
+            //
+            if($arguments >= 1 && $arguments[0] == "time") {
+                return new Response_Wrapper("The current time is " . time());
+            }
+
+            //
+            // /status/
+            //
+            return new Response_Wrapper("The general status is fine");
+        } else {
+            return new Response_Wrapper("Only accepts GET requests", 405);
+        }
+    }
+
+
+
+    /**
+     * Gets general stats
+     *
+     * /stats/zones/ # number of zones,
+     * /stats/zones/
+     * /stats/apps/
+     * /stats/keywords/
+     * /stats/users/
+     *
+     */
+    public function stats($arguments) {
+        if ($this->method == 'GET') {
+
+            //
+            // /status/date/
+            //
             if($arguments >= 1 && $arguments[0] == "date") {
                 date_default_timezone_set('Europe/London'); // set default time zone
                 return "OK The current date is " . date("Y-m-d");
             }
 
-            // status/time
+            //
+            // /status/time/
+            //
             if($arguments >= 1 && $arguments[0] == "time") {
                 return "OK The current time is " . time();
             }
 
-            // status/
+            //
+            // /status/
+            //
             return "OK The general status is fine.";
         } else {
             return "BAD Only accepts GET requests";
         }
-     }
+    }
  }
 
- ?>
+?>

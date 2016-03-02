@@ -80,8 +80,8 @@ abstract class API
         if (method_exists($this, $this->endpoint)) {
             $function_name = $this->endpoint;
             $function_args = $this->args;
-            $function_return_value = $this->{$function_name}($function_args);
-            return $this->_response($function_return_value);
+            $endpoint_return = $this->{$function_name}($function_args);
+            return $this->_response($endpoint_return->response, $endpoint_return->code);
         }
 
         return $this->_response("No Endpoint: $this->endpoint" , 404);
@@ -112,6 +112,18 @@ abstract class API
             500 => 'Internal Server Error',
         );
         return ($status[$code])?$status[$code]:$status[500];
+    }
+}
+
+
+class Response_Wrapper
+{
+    public $code = 0;
+    public $response = "";
+
+    public function __construct($r, $c = 200) {
+        $this->code = $c;
+        $this->response = $r;
     }
 }
 ?>
