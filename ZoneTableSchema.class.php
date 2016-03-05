@@ -13,6 +13,7 @@ abstract class ZoneTableSchema
     const lat = "lat";
     const lng = "lng";
     const radius = "radius";
+    const hasSynced = "hasSynced";
     const blockingApps = "blockingApps";
     const keywords = "keywords";
 
@@ -20,11 +21,12 @@ abstract class ZoneTableSchema
         return "CREATE TABLE if not exists " . ZoneTableSchema::table_name . "
             (
             " . ZoneTableSchema::id . " INT NOT NULL,
-            " . ZoneTableSchema::user_id . " INT,
+            " . ZoneTableSchema::user_id . " TEXT,
             " . ZoneTableSchema::name . " TEXT,
             " . ZoneTableSchema::lat . " REAL,
             " . ZoneTableSchema::lng . " REAL,
             " . ZoneTableSchema::radius . " REAL,
+            " . ZoneTableSchema::hasSynced . " INT,
             " . ZoneTableSchema::blockingApps . " TEXT,
             " . ZoneTableSchema::keywords . " TEXT
             )";

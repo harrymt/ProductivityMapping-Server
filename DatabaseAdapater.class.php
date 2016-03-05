@@ -336,6 +336,7 @@ class DatabaseAdapater
                 `" . ZoneTableSchema::lat . "`,
                 `" . ZoneTableSchema::lng . "`,
                 `" . ZoneTableSchema::radius . "`,
+                `" . ZoneTableSchema::hasSynced . "`,
                 `" . ZoneTableSchema::blockingApps . "`,
                 `" . ZoneTableSchema::keywords . "`)
                 VALUES (" . $zone_object->{ZoneTableSchema::user_id} . ",
@@ -344,6 +345,7 @@ class DatabaseAdapater
                 " . $zone_object->{ZoneTableSchema::lat} . ",
                 " . $zone_object->{ZoneTableSchema::lng} . ",
                 " . $zone_object->{ZoneTableSchema::radius} . ",
+                " . 1 . ",
                 '" . $zone_object->{ZoneTableSchema::blockingApps} . "',
                 '" . $zone_object->{ZoneTableSchema::keywords} . "')";
 
