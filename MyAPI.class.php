@@ -20,8 +20,8 @@ require_once 'DatabaseAdapater.class.php';
 */
 class MyAPI extends API
 {
-    public function __construct($query_string, $api_endpoint) {
-        parent::__construct($query_string, $api_endpoint);
+    public function __construct($request) {
+        parent::__construct($request);
     }
 
     /**
