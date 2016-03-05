@@ -247,7 +247,6 @@ class MyAPI extends API
         // Validate zone object (least important first)
         if($zone_object->{ZoneTableSchema::keywords} == null) { $error_string = "zone keywords cannot be null"; }
         if($zone_object->{ZoneTableSchema::blockingApps} == null) { $error_string = "zone blocking apps cannot be null"; }
-        if($zone_object->{ZoneTableSchema::hasSynced} == null) { $error_string = "has synced cannot be null"; }
         if($zone_object->{ZoneTableSchema::name} == null) { $error_string = "zone name cannot be null"; }
         if($zone_object->{ZoneTableSchema::radius} == null) { $error_string = "zone radius cannot be null"; }
         if($zone_object->{ZoneTableSchema::lng} == null) { $error_string = "zone lng cannot be null"; }
