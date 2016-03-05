@@ -1,5 +1,8 @@
 <?php
 
+require_once '../Environment_variable.class.php';
+require_once 'ZoneTableSchema.class.php';
+
 class DatabaseAdapater
 {
 
@@ -90,6 +93,74 @@ class DatabaseAdapater
             $this->makeZoneObj()
         );
     }
- }
+
+    /**
+     * Writes the zone + the user id to database.
+     *
+     * @param $zone_object taken from payload
+     * @return null on succcess, error string on failure.
+     */
+    public function writeZone($zone_object)
+    {
+        $error_string = null;
+
+        // Connect to the database
+        $mysqli = mysqli_connect(
+            Environment_variable::$MYSQL_HOST,
+            Environment_variable::$MYSQL_USERNAME,
+            Environment_variable::$MYSQL_PASSWORD,
+            Environment_variable::$MYSQL_DATABASE
+        );
+
+        if ($mysqli->connect_errno) {
+            $error_string = "cFailed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+
+        // Make sure the table has been created
+        $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
+        if(!$result) {
+            $error_string = "bFailed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $mysqli->close();
+            return $error_string;
+        }
+
+        $blocking_apps_safe_string = ""; // serialize($zone_object->{ZoneTableSchema::blockingApps})
+        $keywords_safe_string = ""; // serialize($zone_object->{ZoneTableSchema::keywords})
+        foreach ($zone_object->{ZoneTableSchema::blockingApps} as $app) { $blocking_apps_safe_string .= $app . ","; }
+        foreach ($zone_object->{ZoneTableSchema::keywords} as $word) { $keywords_safe_string .= $word . ","; }
+
+        $sql = "INSERT INTO
+                `" . ZoneTableSchema::table_name . "`
+                (`" . ZoneTableSchema::user_id . "`,
+                `" . ZoneTableSchema::id . "`,
+                `" . ZoneTableSchema::name . "`,
+                `" . ZoneTableSchema::lat . "`,
+                `" . ZoneTableSchema::lng . "`,
+                `" . ZoneTableSchema::radius . "`,
+                `" . ZoneTableSchema::blockingApps . "`,
+                `" . ZoneTableSchema::keywords . "`)
+                VALUES (" . $zone_object->{ZoneTableSchema::user_id} . ",
+                " . $zone_object->{ZoneTableSchema::id} . ",
+                '" . $zone_object->{ZoneTableSchema::name} . "',
+                " . $zone_object->{ZoneTableSchema::lat} . ",
+                " . $zone_object->{ZoneTableSchema::lng} . ",
+                " . $zone_object->{ZoneTableSchema::radius} . ",
+                '" . $blocking_apps_safe_string . "',
+                '" . $keywords_safe_string . "')";
+
+        $result = $mysqli->query($sql);
+        if(!$result) {
+            $error_string = "aFailed to write to database: " . $sql . $result;
+        }
+        $mysqli->close();
+
+        // failure
+        if($error_string != null) {
+            return $error_string;
+        }
+        // success
+        return null;
+    }
+}
 
 ?>

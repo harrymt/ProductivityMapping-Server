@@ -2,6 +2,7 @@
 
 require_once 'API.class.php';
 require_once 'DatabaseAdapater.class.php';
+require_once 'ZoneTableSchema.class.php';
 
 /**
  *
@@ -17,12 +18,56 @@ require_once 'DatabaseAdapater.class.php';
  *
  * GET /zones/number/lat/lng/radius/
  *
+ * PUT zone-data
+ *
 */
 class MyAPI extends API
 {
     public function __construct($request) {
         parent::__construct($request);
     }
+
+
+    /**
+     * Saves a zone to the zone database
+     *
+     * PUT /zone/zone-data
+     */
+    public function zone($arguments) {
+        if ($this->method == 'PUT') {
+
+            $zone_object = json_decode($this->file); // '{"name":"zone"}'); // name and value must have double quotes!
+
+            $error_string = null;
+            // Validating zone object (least important first)
+            if($zone_object->{ZoneTableSchema::keywords} == null) { $error_string = "zone keywords cannot be null"; }
+            if($zone_object->{ZoneTableSchema::blockingApps} == null) { $error_string = "zone blocking apps cannot be null"; }
+            if($zone_object->{ZoneTableSchema::name} == null) { $error_string = "zone name cannot be null"; }
+            if($zone_object->{ZoneTableSchema::radius} == null) { $error_string = "zone radius cannot be null"; }
+            if($zone_object->{ZoneTableSchema::lng} == null) { $error_string = "zone lng cannot be null"; }
+            if($zone_object->{ZoneTableSchema::lat} == null) { $error_string = "zone lat cannot be null"; }
+            if($zone_object->{ZoneTableSchema::id} == null) { $error_string = "zone id cannot be null"; }
+            if($zone_object->{ZoneTableSchema::user_id} == null) { $error_string = "user id cannot be null"; }
+
+            if($error_string != null) {
+                // there is an error :(
+                return new Response_Wrapper("Error reading payload. " . $error_string);
+            }
+
+            // Write to database
+            $adapter = new DatabaseAdapater();
+            $success_message = "Successfully written zone '" . $zone_object->{ZoneTableSchema::name}
+                . "' from user " . $zone_object->{ZoneTableSchema::user_id} . " to database.";
+            $database_message = $adapter->writeZone($zone_object);
+            if($database_message == null) {
+                return new Response_Wrapper($success_message);
+            } else {
+                return new Response_Wrapper("Failed to write zone to database: " . $database_message);
+            }
+        }
+        return new Response_Wrapper("Only accepts PUT requests", 405);
+    }
+
 
     /**
      * Gets the status of the API, returns OK or BAD.
