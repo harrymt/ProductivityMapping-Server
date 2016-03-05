@@ -34,7 +34,7 @@ class MyAPI extends API
      * PUT /zone/zone-data
      */
     public function zone($arguments) {
-        if ($this->method == 'PUT') {
+        if ($this->method == 'POST') {
 
             $zone_object = json_decode($this->file); // '{"name":"zone"}'); // name and value must have double quotes!
 

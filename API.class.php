@@ -61,13 +61,10 @@ abstract class API
             case 'DELETE': // Same as POST
             case 'POST':
                 $this->request = $this->_cleanInputs($_POST);
+                $this->file = file_get_contents("php://input");
                 break;
             case 'GET':
                 $this->request = $this->_cleanInputs($_GET);
-                break;
-            case 'PUT':
-                $this->request = $this->_cleanInputs($_GET);
-                $this->file = file_get_contents("php://input");
                 break;
             default:
                 $this->_response('Invalid Method', 405);
