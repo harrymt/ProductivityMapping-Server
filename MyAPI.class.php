@@ -222,18 +222,18 @@ class MyAPI extends API
             $zone_object = $this->deSerializeZone($this->file);
 
             if(gettype($zone_object) == "string") { // error
-                return new Response_Wrapper("Error reading payload. " . $zone_object);
+                return new Response_Wrapper("Error reading payload. " . $zone_object, 405);
             }
 
             // Write to database
             $adapter = new DatabaseAdapater();
-            $success_message = "Successfully written zone '" . $zone_object->{ZoneTableSchema::name}
+            $success_message = "Written zone '" . $zone_object->{ZoneTableSchema::name}
                 . "' from user " . $zone_object->{ZoneTableSchema::user_id} . " to database.";
             $database_message = $adapter->writeZone($zone_object);
             if($database_message == null) {
-                return new Response_Wrapper($success_message);
+                return new Response_Wrapper(Array("success" => $success_message)); // Force it to be JSON
             } else {
-                return new Response_Wrapper("Failed to write zone to database: " . $database_message);
+                return new Response_Wrapper("Failed to write zone to database: " . $database_message, 405);
             }
         }
         return new Response_Wrapper("Only accepts PUT requests", 405);
