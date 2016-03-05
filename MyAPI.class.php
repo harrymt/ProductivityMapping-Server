@@ -179,7 +179,9 @@ class MyAPI extends API
                 $lat = $this->get_numeric($arguments[1]);
                 $lng = $this->get_numeric($arguments[2]);
                 $radius = $this->get_numeric($arguments[3]);
-                return new Response_Wrapper($adapter->getZonesNearLocation($number, $lat, $lng, $radius));
+
+                $zones = $adapter->getZonesNearLocation($number, $lat, $lng, $radius);
+                return new Response_Wrapper($zones);
             }
 
 
@@ -215,21 +217,12 @@ class MyAPI extends API
      */
     public function zone($arguments) {
         if ($this->method == 'POST') {
-            $zone_object = json_decode($this->file);
 
-            $error_string = null;
-            // Validate zone object (least important first)
-            if($zone_object->{ZoneTableSchema::keywords} == null) { $error_string = "zone keywords cannot be null"; }
-            if($zone_object->{ZoneTableSchema::blockingApps} == null) { $error_string = "zone blocking apps cannot be null"; }
-            if($zone_object->{ZoneTableSchema::name} == null) { $error_string = "zone name cannot be null"; }
-            if($zone_object->{ZoneTableSchema::radius} == null) { $error_string = "zone radius cannot be null"; }
-            if($zone_object->{ZoneTableSchema::lng} == null) { $error_string = "zone lng cannot be null"; }
-            if($zone_object->{ZoneTableSchema::lat} == null) { $error_string = "zone lat cannot be null"; }
-            if($zone_object->{ZoneTableSchema::id} == null) { $error_string = "zone id cannot be null"; }
-            if($zone_object->{ZoneTableSchema::user_id} == null) { $error_string = "user id cannot be null"; }
+            // Get the zone from the data passed in
+            $zone_object = $this->deSerializeZone($this->file);
 
-            if($error_string != null) { // Bad parameter in payload
-                return new Response_Wrapper("Error reading payload. " . $error_string);
+            if(gettype($zone_object) == "string") { // error
+                return new Response_Wrapper("Error reading payload. " . $zone_object);
             }
 
             // Write to database
@@ -244,6 +237,37 @@ class MyAPI extends API
             }
         }
         return new Response_Wrapper("Only accepts PUT requests", 405);
+    }
+
+    private function deSerializeZone($payload) {
+        $zone_object = json_decode($payload);
+
+        $error_string = null;
+
+        // Validate zone object (least important first)
+        if($zone_object->{ZoneTableSchema::keywords} == null) { $error_string = "zone keywords cannot be null"; }
+        if($zone_object->{ZoneTableSchema::blockingApps} == null) { $error_string = "zone blocking apps cannot be null"; }
+        if($zone_object->{ZoneTableSchema::name} == null) { $error_string = "zone name cannot be null"; }
+        if($zone_object->{ZoneTableSchema::radius} == null) { $error_string = "zone radius cannot be null"; }
+        if($zone_object->{ZoneTableSchema::lng} == null) { $error_string = "zone lng cannot be null"; }
+        if($zone_object->{ZoneTableSchema::lat} == null) { $error_string = "zone lat cannot be null"; }
+        if($zone_object->{ZoneTableSchema::id} == null) { $error_string = "zone id cannot be null"; }
+        if($zone_object->{ZoneTableSchema::user_id} == null) { $error_string = "user id cannot be null"; }
+
+        // Convert Blocking Apps and Keywords to database safe strings
+        $blocking_apps_safe_string = "";
+        foreach ($zone_object->{ZoneTableSchema::blockingApps} as $app) { $blocking_apps_safe_string .= $app . ","; }
+        $zone_object->{ZoneTableSchema::blockingApps} = $blocking_apps_safe_string;
+
+        $keywords_safe_string = "";
+        foreach ($zone_object->{ZoneTableSchema::keywords} as $word) { $keywords_safe_string .= $word . ","; }
+        $zone_object->{ZoneTableSchema::keywords} = $keywords_safe_string;
+
+        if($error_string != null) {
+            return $error_string;
+        }
+
+        return $zone_object;
     }
 
 }

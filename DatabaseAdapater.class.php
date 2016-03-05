@@ -20,16 +20,6 @@ class DatabaseAdapater
         return $stack;
     }
 
-    // Utility function to create dummy data
-    private function makeZoneObj() {
-        return array(
-            "name" => "my zone",
-            "radius" => 47.1,
-            "lat" => 52.123123,
-            "lng" => 52.123123
-        );
-    }
-
     /**
      * Gets the top $number of popular keywords.
      *
@@ -87,11 +77,57 @@ class DatabaseAdapater
      * @return String array Zone.
      */
     public function getZonesNearLocation($number, $lat, $lng, $radius) {
-        return array(
-            $this->makeZoneObj(),
-            $this->makeZoneObj(),
-            $this->makeZoneObj()
+
+        // SQL query to return number near location, using The Haversine formula!
+        // http://en.wikipedia.org/wiki/Haversine_formula
+
+        $miles_number = 3959;
+        $kilometers_number = 6371;
+
+        $sql = "SELECT " . ZoneTableSchema::name . ", ". ZoneTableSchema::lat . ", " . ZoneTableSchema::lng . ", " . ZoneTableSchema::radius . ", " . ZoneTableSchema::blockingApps . ", " . ZoneTableSchema::keywords . ",
+                ( ". $miles_number . " * acos( cos( radians(" . $lat . ") ) * cos( radians( " . ZoneTableSchema::lat . " ) )
+                * cos( radians( " . ZoneTableSchema::lng . " ) - radians(" . $lng . ") ) + sin( radians(" . $lat . ") )
+                * sin( radians( " . ZoneTableSchema::lat . " ) ) ) )
+                AS distance FROM " . ZoneTableSchema::table_name . " HAVING distance < " . $radius . " ORDER BY distance LIMIT 0 , " . $number . ";";
+
+
+        $error_string = null;
+        // Connect to the database
+        $mysqli = mysqli_connect(
+            Environment_variable::$MYSQL_HOST,
+            Environment_variable::$MYSQL_USERNAME,
+            Environment_variable::$MYSQL_PASSWORD,
+            Environment_variable::$MYSQL_DATABASE
         );
+        if ($mysqli->connect_errno) {
+            $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+        $result = $mysqli->query($sql);
+        if(!$result) {
+            $error_string = "Failed to write to database: " . $sql . $result;
+        }
+        $mysqli->close();
+        // failure
+        if($error_string != null) {
+            return $error_string;
+        }
+
+        // Make into php object array
+        $result->data_seek(0);
+        $zones_array = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($zones_array, array(
+                ZoneTableSchema::name => $row[ZoneTableSchema::name],
+                ZoneTableSchema::lat => $row[ZoneTableSchema::lat],
+                ZoneTableSchema::lng => $row[ZoneTableSchema::lng],
+                ZoneTableSchema::radius => $row[ZoneTableSchema::radius],
+                ZoneTableSchema::blockingApps => $row[ZoneTableSchema::blockingApps],
+                ZoneTableSchema::keywords => $row[ZoneTableSchema::keywords]
+            ));
+        }
+
+        // return
+        return $zones_array;
     }
 
     /**
@@ -113,21 +149,16 @@ class DatabaseAdapater
         );
 
         if ($mysqli->connect_errno) {
-            $error_string = "cFailed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+            $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
 
         // Make sure the table has been created
         $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
         if(!$result) {
-            $error_string = "bFailed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $error_string = "Failed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
             $mysqli->close();
             return $error_string;
         }
-
-        $blocking_apps_safe_string = ""; // serialize($zone_object->{ZoneTableSchema::blockingApps})
-        $keywords_safe_string = ""; // serialize($zone_object->{ZoneTableSchema::keywords})
-        foreach ($zone_object->{ZoneTableSchema::blockingApps} as $app) { $blocking_apps_safe_string .= $app . ","; }
-        foreach ($zone_object->{ZoneTableSchema::keywords} as $word) { $keywords_safe_string .= $word . ","; }
 
         $sql = "INSERT INTO
                 `" . ZoneTableSchema::table_name . "`
@@ -145,8 +176,8 @@ class DatabaseAdapater
                 " . $zone_object->{ZoneTableSchema::lat} . ",
                 " . $zone_object->{ZoneTableSchema::lng} . ",
                 " . $zone_object->{ZoneTableSchema::radius} . ",
-                '" . $blocking_apps_safe_string . "',
-                '" . $keywords_safe_string . "')";
+                '" . $zone_object->{ZoneTableSchema::blockingApps} . "',
+                '" . $zone_object->{ZoneTableSchema::keywords} . "')";
 
         $result = $mysqli->query($sql);
         if(!$result) {
