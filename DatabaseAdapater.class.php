@@ -9,17 +9,6 @@ class DatabaseAdapater
     public function __construct() {
     }
 
-    // Utility function to create dummy data
-    private function makeArr($number, $str) {
-        $i = 0; $stack = array();
-        while ($i < $number) {
-            array_push($stack, $str);
-            $i++;
-        };
-
-        return $stack;
-    }
-
     /**
      * Gets the top $number of popular keywords.
      *
@@ -27,7 +16,66 @@ class DatabaseAdapater
      * @return String array Keywords.
      */
     public function getKeywords($number) {
-        return $this->makeArr($number, "a_keyword");
+        $error_string = null;
+        // Connect to the database
+        $mysqli = mysqli_connect(
+            Environment_variable::$MYSQL_HOST,
+            Environment_variable::$MYSQL_USERNAME,
+            Environment_variable::$MYSQL_PASSWORD,
+            Environment_variable::$MYSQL_DATABASE
+        );
+        if ($mysqli->connect_errno) {
+            $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+
+        $sql = "SELECT " . ZoneTableSchema::keywords . " FROM " . ZoneTableSchema::table_name . ";";
+        $result = $mysqli->query($sql);
+        if(!$result) {
+            $error_string = "Failed to write to database: " . $sql . $result;
+        }
+        $mysqli->close();
+        // failure
+        if($error_string != null) {
+            return $error_string;
+        }
+
+        // Make into php object array
+        $result->data_seek(0);
+        $keywords_array = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($keywords_array, str_getcsv(rtrim($row[ZoneTableSchema::keywords], ",")));
+        }
+
+        // Find the top n most common words
+        $top_words = $this->findTopNStringsFromStringArray($number, $keywords_array);
+
+        // return
+        return $top_words;
+    }
+
+    private function findTopNStringsFromStringArray($n, $string_array) {
+        if($n == 0) { return null; } // stop the extra processing
+
+        $assoc_array = null;
+        foreach($string_array as $array) {
+            foreach($array as $word) {
+                $assoc_array[$word]++;
+            }
+        }
+
+        // Get the top $n popular strings
+        $output_words = null;
+        $i = 0;
+        foreach ($assoc_array as $key => $value) {
+            $i++;
+            $output_words[$key] = $value;
+
+            if($i >= $n) {
+                break;
+            }
+        }
+
+        return $output_words;
     }
 
     /**
@@ -40,18 +88,95 @@ class DatabaseAdapater
      * @return String array Keywords.
      */
     public function getKeywordsNearLocation($number, $lat, $lng, $radius) {
-        return $this->makeArr($number, "keyword_near_(" . $lat . "," . $lng . ")_with_radius_" . $radius);
+        // SQL query to return number near location, using The Haversine formula!
+        // http://en.wikipedia.org/wiki/Haversine_formula
+
+        $miles_number = 3959;
+        $kilometers_number = 6371;
+
+        $sql = "SELECT " . ZoneTableSchema::keywords . ",
+                ( ". $miles_number . " * acos( cos( radians(" . $lat . ") ) * cos( radians( " . ZoneTableSchema::lat . " ) )
+                * cos( radians( " . ZoneTableSchema::lng . " ) - radians(" . $lng . ") ) + sin( radians(" . $lat . ") )
+                * sin( radians( " . ZoneTableSchema::lat . " ) ) ) )
+                AS distance FROM " . ZoneTableSchema::table_name . " HAVING distance < " . $radius . " ORDER BY distance LIMIT 0 , " . $number . ";";
+
+        $error_string = null;
+        // Connect to the database
+        $mysqli = mysqli_connect(
+            Environment_variable::$MYSQL_HOST,
+            Environment_variable::$MYSQL_USERNAME,
+            Environment_variable::$MYSQL_PASSWORD,
+            Environment_variable::$MYSQL_DATABASE
+        );
+        if ($mysqli->connect_errno) {
+            $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+        $result = $mysqli->query($sql);
+        if(!$result) {
+            $error_string = "Failed to write to database: " . $sql . $result;
+        }
+        $mysqli->close();
+        // failure
+        if($error_string != null) {
+            return $error_string;
+        }
+
+        // Make into php object array
+        $result->data_seek(0);
+        $apps_array = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($apps_array, array(
+                ZoneTableSchema::keywords => str_getcsv(rtrim($row[ZoneTableSchema::keywords], ","))
+            ));
+        }
+
+        // return
+        return $apps_array;
     }
 
 
     /**
-     * Gets the top $number of popular keywords.
+     * Gets the top $number of popular apps.
      *
-     * @param  int $number Number of keywords to get.
-     * @return String array Keywords.
+     * @param  int $number Number of apps to get.
+     * @return String array Apps.
      */
     public function getApps($number) {
-        return $this->makeArr($number, "a_keyword");
+        $error_string = null;
+        // Connect to the database
+        $mysqli = mysqli_connect(
+            Environment_variable::$MYSQL_HOST,
+            Environment_variable::$MYSQL_USERNAME,
+            Environment_variable::$MYSQL_PASSWORD,
+            Environment_variable::$MYSQL_DATABASE
+        );
+        if ($mysqli->connect_errno) {
+            $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+
+        $sql = "SELECT " . ZoneTableSchema::blockingApps . " FROM " . ZoneTableSchema::table_name . ";";
+        $result = $mysqli->query($sql);
+        if(!$result) {
+            $error_string = "Failed to write to database: " . $sql . $result;
+        }
+        $mysqli->close();
+        // failure
+        if($error_string != null) {
+            return $error_string;
+        }
+
+        // Make into php object array
+        $result->data_seek(0);
+        $apps_array = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($apps_array, str_getcsv(rtrim($row[ZoneTableSchema::blockingApps], ",")));
+        }
+
+        // Find the top n most common words
+        $top_words = $this->findTopNStringsFromStringArray($number, $apps_array);
+
+        // return
+        return $top_words;
     }
 
     /**
@@ -64,7 +189,50 @@ class DatabaseAdapater
      * @return String array Apps.
      */
     public function getAppsNearLocation($number, $lat, $lng, $radius) {
-        return $this->makeArr($number, "keyword_near_(" . $lat . "," . $lng . ")_with_radius_" . $radius);
+        // SQL query to return number near location, using The Haversine formula!
+        // http://en.wikipedia.org/wiki/Haversine_formula
+
+        $miles_number = 3959;
+        $kilometers_number = 6371;
+
+        $sql = "SELECT " . ZoneTableSchema::blockingApps . ",
+                ( ". $miles_number . " * acos( cos( radians(" . $lat . ") ) * cos( radians( " . ZoneTableSchema::lat . " ) )
+                * cos( radians( " . ZoneTableSchema::lng . " ) - radians(" . $lng . ") ) + sin( radians(" . $lat . ") )
+                * sin( radians( " . ZoneTableSchema::lat . " ) ) ) )
+                AS distance FROM " . ZoneTableSchema::table_name . " HAVING distance < " . $radius . " ORDER BY distance LIMIT 0 , " . $number . ";";
+
+        $error_string = null;
+        // Connect to the database
+        $mysqli = mysqli_connect(
+            Environment_variable::$MYSQL_HOST,
+            Environment_variable::$MYSQL_USERNAME,
+            Environment_variable::$MYSQL_PASSWORD,
+            Environment_variable::$MYSQL_DATABASE
+        );
+        if ($mysqli->connect_errno) {
+            $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+        $result = $mysqli->query($sql);
+        if(!$result) {
+            $error_string = "Failed to write to database: " . $sql . $result;
+        }
+        $mysqli->close();
+        // failure
+        if($error_string != null) {
+            return $error_string;
+        }
+
+        // Make into php object array
+        $result->data_seek(0);
+        $apps_array = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($apps_array, array(
+                ZoneTableSchema::blockingApps => str_getcsv(rtrim($row[ZoneTableSchema::blockingApps], ","))
+            ));
+        }
+
+        // return
+        return $apps_array;
     }
 
     /**
