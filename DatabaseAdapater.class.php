@@ -27,6 +27,14 @@ class DatabaseAdapater
         if ($mysqli->connect_errno) {
             $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
+        // Make sure the table has been created
+        $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
+        if(!$result) {
+            $error_string = "Failed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $mysqli->close();
+            return $error_string;
+        }
+
 
         $sql = "SELECT " . ZoneTableSchema::keywords . " FROM " . ZoneTableSchema::table_name . ";";
         $result = $mysqli->query($sql);
@@ -111,6 +119,14 @@ class DatabaseAdapater
         if ($mysqli->connect_errno) {
             $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
+        // Make sure the table has been created
+        $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
+        if(!$result) {
+            $error_string = "Failed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $mysqli->close();
+            return $error_string;
+        }
+
         $result = $mysqli->query($sql);
         if(!$result) {
             $error_string = "Failed to write to database: " . $sql . $result;
@@ -152,6 +168,13 @@ class DatabaseAdapater
         );
         if ($mysqli->connect_errno) {
             $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+        // Make sure the table has been created
+        $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
+        if(!$result) {
+            $error_string = "Failed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $mysqli->close();
+            return $error_string;
         }
 
         $sql = "SELECT " . ZoneTableSchema::blockingApps . " FROM " . ZoneTableSchema::table_name . ";";
@@ -212,6 +235,14 @@ class DatabaseAdapater
         if ($mysqli->connect_errno) {
             $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
+        // Make sure the table has been created
+        $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
+        if(!$result) {
+            $error_string = "Failed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $mysqli->close();
+            return $error_string;
+        }
+
         $result = $mysqli->query($sql);
         if(!$result) {
             $error_string = "Failed to write to database: " . $sql . $result;
@@ -270,6 +301,15 @@ class DatabaseAdapater
         if ($mysqli->connect_errno) {
             $error_string = "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
+        // Make sure the table has been created
+        $result = $mysqli->query(ZoneTableSchema::make_sql_table_string());
+        if(!$result) {
+            $error_string = "Failed to create zone table: " . ZoneTableSchema::make_sql_table_string() . $result;
+            $mysqli->close();
+            return $error_string;
+        }
+
+
         $result = $mysqli->query($sql);
         if(!$result) {
             $error_string = "Failed to write to database: " . $sql . $result;
@@ -339,19 +379,19 @@ class DatabaseAdapater
                 `" . ZoneTableSchema::hasSynced . "`,
                 `" . ZoneTableSchema::blockingApps . "`,
                 `" . ZoneTableSchema::keywords . "`)
-                VALUES (" . $zone_object->{ZoneTableSchema::user_id} . ",
+                VALUES ('" . $zone_object->{ZoneTableSchema::user_id} . "',
                 " . $zone_object->{ZoneTableSchema::id} . ",
                 '" . $zone_object->{ZoneTableSchema::name} . "',
                 " . $zone_object->{ZoneTableSchema::lat} . ",
                 " . $zone_object->{ZoneTableSchema::lng} . ",
                 " . $zone_object->{ZoneTableSchema::radius} . ",
-                " . 1 . ",
+                1,
                 '" . $zone_object->{ZoneTableSchema::blockingApps} . "',
                 '" . $zone_object->{ZoneTableSchema::keywords} . "')";
 
         $result = $mysqli->query($sql);
         if(!$result) {
-            $error_string = "aFailed to write to database: " . $sql . $result;
+            $error_string = "Failed to write to database: " . $sql . $result;
         }
         $mysqli->close();
 

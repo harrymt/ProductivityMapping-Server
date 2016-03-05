@@ -46,21 +46,21 @@ class MyAPI extends API
                 //
                 if($arguments[0] == "date") {
                     date_default_timezone_set('Europe/London'); // set default time zone
-                    return new Response_Wrapper("The current date is " . date("Y-m-d"));
+                    return new Response_Wrapper(Array("The current date is " . date("Y-m-d")));
                 }
 
                 //
                 // /status/time/
                 //
                 if($arguments[0] == "time") {
-                    return new Response_Wrapper("The current time is " . time());
+                    return new Response_Wrapper(Array("The current time is " . time()));
                 }
             }
 
             //
             // /status/
             //
-            return new Response_Wrapper("The general status is fine");
+            return new Response_Wrapper(Array("The general status is fine"));
         } else {
             return new Response_Wrapper("Only accepts GET requests", 405);
         }
