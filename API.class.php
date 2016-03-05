@@ -67,7 +67,7 @@ abstract class API
                 $this->request = $this->_cleanInputs($_GET);
                 break;
             default:
-                $this->_response('Invalid Method', 405);
+                $this->_response(Array("error" => 'Invalid Method'), 405);
                 break;
         }
     }
@@ -81,12 +81,12 @@ abstract class API
             return $this->_response($endpoint_return->response, $endpoint_return->code);
         }
 
-        return $this->_response("No Endpoint: $this->endpoint" , 404);
+        return $this->_response(Array("error" => "No Endpoint: $this->endpoint") , 404);
     }
 
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
-        return json_encode(Array("response" => $data));
+        return json_encode($data);
     }
 
     private function _cleanInputs($data) {
@@ -133,8 +133,10 @@ class Response_Wrapper
     public $response = "";
 
     public function __construct($r, $c = 200) {
+        if($c != 200) {
+            $this->response = Array("error" => $r);
+        }
         $this->code = $c;
-        $this->response = $r;
     }
 }
 ?>
