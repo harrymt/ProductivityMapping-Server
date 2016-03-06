@@ -23,8 +23,8 @@ require_once 'ZoneTableSchema.class.php';
 */
 class MyAPI extends API
 {
-    public function __construct($request) {
-        parent::__construct($request);
+    public function __construct($request, $query_string) {
+        parent::__construct($request, $query_string);
     }
 
 

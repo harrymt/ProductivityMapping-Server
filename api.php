@@ -1,19 +1,19 @@
 <?php
 
-  require_once 'MyAPI.class.php';
+    require_once 'MyAPI.class.php';
 
-  // Requests from the same server don't have a HTTP_ORIGIN header
-  if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
+    // Requests from the same server don't have a HTTP_ORIGIN header
+    if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
       $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
-  }
+    }
 
-  $request = $_SERVER['PATH_INFO'];
+    $request = $_SERVER['PATH_INFO'];
 
-  try {
-      $API = new MyAPI($request, $_SERVER['HTTP_ORIGIN']);
+    try {
+      $API = new MyAPI($request, $_SERVER["QUERY_STRING"], $_SERVER['HTTP_ORIGIN']);
       echo $API->processAPI();
-  } catch (Exception $e) {
-      echo json_encode(Array('error' => $e->getMessage()));
-  }
+    } catch (Exception $e) {
+      echo json_encode(Array("error" => $e->getMessage()));
+    }
 
 ?>
