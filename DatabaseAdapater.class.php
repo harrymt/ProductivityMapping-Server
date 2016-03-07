@@ -83,6 +83,8 @@ class DatabaseAdapater
             }
         }
 
+        arsort($output_words);
+
         return $output_words;
     }
 
