@@ -71,19 +71,10 @@ class DatabaseAdapater
             }
         }
 
+        arsort($assoc_array);
+
         // Get the top $n popular strings
-        $output_words = null;
-        $i = 0;
-        foreach ($assoc_array as $key => $value) {
-            $i++;
-            $output_words[$key] = $value;
-
-            if($i >= $n) {
-                break;
-            }
-        }
-
-        arsort($output_words);
+        $output_words = array_slice($assoc_array, 0, $n, true);
 
         return $output_words;
     }
