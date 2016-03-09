@@ -15,7 +15,7 @@
         $curl = curl_init();
 
         $api_key = "?apikey=" . Environment_variable::$API_KEY;
-        $api_url = Environment_variable::$LOCAL_SERVER_URL;
+        $api_url = Environment_variable::$SERVER_URL;
 
         $url = $api_url . $url . $api_key;
 
