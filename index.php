@@ -1,9 +1,9 @@
 <?php
 
-    //require_once '../Environment_variable.class.php';
+    require_once '../Environment_variable.class.php';
 
-   // $api_key = "?apikey=" . Environment_variable::$API_KEY;
-   // $api_url = Environment_variable::$SERVER_URL;
+    $api_key = "?apikey=" . Environment_variable::$API_KEY;
+    $api_url = Environment_variable::$SERVER_URL;
 
     /**
      * Perform a GET request to the API.
@@ -12,23 +12,23 @@
      * @param bool $data array("param" => "value") ==> index.php?param=value
      * @return mixed JSON output.
      */
-//    function requestGETFromAPI($url, $data = false)
-//    {
-//        $curl = curl_init();
-//
-//        if ($data) {
-//            $url = sprintf("%s?%s", $url, http_build_query($data));
-//        }
-//
-//        curl_setopt($curl, CURLOPT_URL, $url);
-//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-//
-//        $result = curl_exec($curl);
-//
-//        curl_close($curl);
-//
-//        return $result;
-//    }
+    function requestGETFromAPI($url, $data = false)
+    {
+        $curl = curl_init();
+
+        if ($data) {
+            $url = sprintf("%s?%s", $url, http_build_query($data));
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $result;
+    }
 
 ?>
 
@@ -56,8 +56,8 @@
     <h1>Study Mapping</h1>
     <p>The status of the API is <span class="status status-good">good</span></p>
     <p><?php
-        //$response = requestGETFromAPI($api_url . '/status/date' . $api_key);
-        //echo json_decode($response)[0];
+        $response = requestGETFromAPI($api_url . '/status/date' . $api_key);
+        echo json_decode($response)[0];
     ?></p>
 
 </body>
