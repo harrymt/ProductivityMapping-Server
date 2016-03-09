@@ -56,8 +56,8 @@
     <h1>Study Mapping</h1>
     <p>The status of the API is <span class="status status-good">good</span></p>
     <p><?php
-        $response = requestGETFromAPI($api_url . '/status/date' . $api_key);
-        echo json_decode($response)[0];
+        //$response = requestGETFromAPI($api_url . '/status/date' . $api_key);
+        //echo json_decode($response)[0];
     ?></p>
 
 </body>
