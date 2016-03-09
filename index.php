@@ -2,8 +2,6 @@
 
     require_once '../Environment_variable.class.php';
 
-    $api_key = "?apikey=" . Environment_variable::$API_KEY;
-    $api_url = Environment_variable::$SERVER_URL;
 
     /**
      * Perform a GET request to the API.
@@ -15,6 +13,11 @@
     function requestGETFromAPI($url, $data = false)
     {
         $curl = curl_init();
+
+        $api_key = "?apikey=" . Environment_variable::$API_KEY;
+        $api_url = Environment_variable::$LOCAL_SERVER_URL;
+
+        $url = $api_url . $url . $api_key;
 
         if ($data) {
             $url = sprintf("%s&%s", $url, http_build_query($data));
@@ -30,7 +33,7 @@
 
         curl_close($curl);
 
-        return $result;
+        return json_decode($result)->{"response"};
     }
 
 ?>
@@ -43,24 +46,29 @@
         body {
             font-family: Arial, sans-serif;
         }
-
-        .status {
-            font-weight: bold;
-        }
-
-        .status-good {
-            color: green;
-        }
     </style>
 </head>
 <body>
+    <?php
+    // STATUS
+        $server_status = requestGETFromAPI('/status/');
+        $server_date = requestGETFromAPI('/status/date');
+        $server_time = requestGETFromAPI('/status/time'); date_default_timezone_set('GMT'); $st = new DateTime("@$server_time");
+        $server_time_formatted = $st->format('H:i:s');
+
+    ?>
+
     <h1>Study Mapping</h1>
-    <p>The status of the API is <span class="status status-good">good</span></p>
-    <p><?php
-        // echo file_get_contents($api_url . '/status/date' . $api_key);
-        echo requestGETFromAPI($api_url . '/status/date' . $api_key);
-        //echo json_decode($response)[0];
-    ?></p>
+    <p><?= $server_status; ?> at <?= $server_date . ' ' . $server_time_formatted; ?></p>
+
+    <h2>Keywords</h2>
+    <code><?= var_dump(requestGETFromAPI('/keywords/3')); ?></code>
+
+    <h2>Apps</h2>
+    <code><?= var_dump(requestGETFromAPI('/apps/3')); ?></code>
+
+    <h2>Zones</h2>
+    <code><?= var_dump(requestGETFromAPI('/zones/3/1/1/100000000')); ?></code>
 
 </body>
 </html>

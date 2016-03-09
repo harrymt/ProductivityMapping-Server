@@ -46,21 +46,21 @@ class MyAPI extends API
                 //
                 if($arguments[0] == "date") {
                     date_default_timezone_set('Europe/London'); // set default time zone
-                    return new Response_Wrapper(Array("The current date is " . date("Y-m-d")));
+                    return new Response_Wrapper(date("Y-m-d"));
                 }
 
                 //
                 // /status/time/
                 //
                 if($arguments[0] == "time") {
-                    return new Response_Wrapper(Array("The current time is " . time()));
+                    return new Response_Wrapper(time());
                 }
             }
 
             //
             // /status/
             //
-            return new Response_Wrapper(Array("The general status is fine"));
+            return new Response_Wrapper("The general status is good");
         } else {
             return new Response_Wrapper("Only accepts GET requests", 405);
         }
@@ -231,14 +231,20 @@ class MyAPI extends API
                 . "' from user " . $zone_object->{ZoneTableSchema::user_id} . " to database.";
             $database_message = $adapter->writeZone($zone_object);
             if($database_message == null) {
-                return new Response_Wrapper(Array("success" => $success_message)); // Force it to be JSON
+                return new Response_Wrapper($success_message); // Force it to be JSON
             } else {
                 return new Response_Wrapper("Failed to write zone to database: " . $database_message, 405);
             }
         }
-        return new Response_Wrapper("Only accepts PUT requests", 405);
+        return new Response_Wrapper("Only accepts POST requests", 405);
     }
 
+    /**
+     * Validate the payload zone data.
+     *
+     * @param $payload json passed with POST request.
+     * @return mixed|null|string zone object
+     */
     private function deSerializeZone($payload) {
         $zone_object = json_decode($payload);
 
