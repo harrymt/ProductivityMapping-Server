@@ -18,7 +18,7 @@ require_once 'ZoneTableSchema.class.php';
  *
  * GET /zones/number/lat/lng/radius/
  *
- * POST zone-data
+ * POST /zone/
  *
 */
 class MyAPI extends API
