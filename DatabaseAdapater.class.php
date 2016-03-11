@@ -67,7 +67,9 @@ class DatabaseAdapater
         $assoc_array = null;
         foreach($string_array as $array) {
             foreach($array as $word) {
-                $assoc_array[$word]++;
+                if($word != "") { // skip empty strings
+                    $assoc_array[$word]++;
+                }
             }
         }
 
