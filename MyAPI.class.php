@@ -62,7 +62,7 @@ class MyAPI extends API
             //
             // /status/
             //
-            return new Response_Wrapper("The general status is good");
+            return new Response_Wrapper("Server Status: OK");
         } else {
             return new Response_Wrapper("Only accepts GET requests", 405);
         }
