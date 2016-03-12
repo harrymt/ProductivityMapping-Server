@@ -17,9 +17,10 @@
     foreach($keywords as $key => $value) {
         array_push($word_pairs, array(
             "text" => $key,
-            "size" => $value * 10
+            "size" => $value
         ));
     }
+
 
 ?>
 
