@@ -126,7 +126,7 @@ ol, ul {
 .subtext {
   color: rgba(255, 255, 255, .36);
   display: block;
-  padding-top: 20px;
+  padding-top: 10px;
   text-decoration: none;
 }
 
@@ -200,41 +200,6 @@ ol, ul {
 }
 
 
-//*****************************************************
-
-//
-// Tags
-//
-
-.tags {
-  list-style: none;
-  margin: 1.4em auto 0;
-  width: 80%;
-
-  li {
-    background-color: rgba(0, 0, 0, .2);
-    border-radius: 5px;
-    color: rgba(255, 255, 255, .65);
-    display: inline-block;
-    font-size: 20px;
-    line-height: 100%;
-    margin: 4px 5px 0;
-    padding: 6px 0;
-    position: relative;
-
-    a {
-      color: rgba(255, 255, 255, .65);
-      padding: 10px;
-      text-decoration: none;
-    }
-  }
-
-  li:hover {
-    background-color: rgba(0, 0, 0, .5);
-    cursor: pointer;
-  }
-}
-
 
 //*****************************************************
 
@@ -303,10 +268,6 @@ ol, ul {
   .intro-pitch h2 {
     font-size: 19px;
     margin-top: 1em;
-  }
-
-  .tags li {
-    font-size: 12px;
   }
 
   .section h3 {

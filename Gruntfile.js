@@ -11,9 +11,7 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     style: 'compressed',
-
                     loadPath: require('node-bourbon').includePaths
-
                 },
 
                 files: {
@@ -54,7 +52,6 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat'); // Concatenate JS
-    grunt.loadNpmTasks('grunt-contrib-uglify'); // Minify JS
     grunt.loadNpmTasks('grunt-contrib-sass'); // Process Sass files
     grunt.loadNpmTasks('grunt-contrib-watch'); // On file update, do task
 

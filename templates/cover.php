@@ -16,19 +16,6 @@
             <div class="intro-pitch-inner">
                 <p class="name">Harry Mumford<span>&#45;</span>Turner</p>
                 <h2><a href="http://www.nottingham.ac.uk/" target="_blank">UoN</a> Study Mapper</span></h2>
-
-                <ul class="tags">
-                    <li>
-                        <a href="#maps">Maps</a>
-                    </li>
-                    <li>
-                        <a href="#keywords">Keywords</a>
-                    </li>
-                    <li>
-                        <a href="#apps">Apps</a>
-                    </li>
-                </ul>
-
                 <a class="subtext"><?= RequestUtil::get('/status/'); ?> at <?= RequestUtil::get('/status/time'); ?></a>
             </div>
         </div>
