@@ -10,7 +10,7 @@
 
 <?php
 
-    $zone_lat = "51.2"; $zone_lng = "-1.19"; $zone_radius = "10";
+    $zone_lat = "40.3"; $zone_lng = "-1.0"; $zone_radius = "10";
     $zones = RequestUtil::get("/zones/3/$zone_lat/$zone_lng/$zone_radius");
 
     function makeZoneObject($zone) {
