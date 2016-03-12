@@ -32,17 +32,6 @@ module.exports = function (grunt) {
             }
         },
 
-        uglify: {
-            options: {
-                mangle: false
-            },
-            my_target: {
-                files: {
-                    'js/built/main.min.js': ['js/built/main.min.js']
-                }
-            }
-        },
-
         watch: {
             css: {
                 files: ['scss/*.scss'],
@@ -65,5 +54,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass'); // Process Sass files
     grunt.loadNpmTasks('grunt-contrib-watch'); // On file update, do task
 
-    grunt.registerTask('default', ['concat', 'uglify', 'sass']);
+    grunt.registerTask('default', ['concat', 'sass']);
 };
