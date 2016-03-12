@@ -12,12 +12,14 @@
 <body>
     <?php include('templates/cover.php'); ?>
 
-    <?php include('templates/map.php'); ?>
+    <?php include('templates/maps.php'); ?>
 
     <?php include('templates/keywords.php'); ?>
 
     <?php include('templates/apps.php'); ?>
 
-    <script src="js/main.min.js"></script>
+    <?php include('templates/footer.php'); ?>
+
+    <script src="js/built/main.min.js"></script>
 </body>
 </html>

@@ -1,7 +1,21 @@
 
+@import 'bourbon';
+
+//*****************************************************
+
 //
-// GLOBALS
+// Globals
 //
+html,body,div,span,h1,h2,h3,h4,h5,h6,p,a,img,strong,i,ol,ul,li,table,tbody,tfoot,thead,tr,th,td
+{
+  background: transparent;
+  border: 0;
+  font-size: 100%;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
 
 html,
 body {
@@ -9,67 +23,36 @@ body {
 }
 
 body {
-  background-color: #555;
-  color: #fff;
   font: 500 16px Avenir, sans-serif;
   line-height: 1;
-  text-align: center;
 }
 
-a {
-  color: inherit;
-}
-
-h1 {
-  font-size: 23px;
-  font-weight: 400;
-}
-
-table {
-  background-color: #7b7b7b;
-  border: 1px solid;
-  border-collapse: collapse; // Means we can have tr borders
-  color: #fff;
-  font-size: 15px;
-  line-height: 1.6em;
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-  opacity: .9;
-  padding: 5px;
-  text-align: left;
-
-  th,
-  td {
-    border-left: 1px solid;
-    padding: 5px;
-  }
-
-  th {
-    border-right: 1px solid;
-    font-size: 12px;
-    font-weight: normal;
-  }
-
-  tr {
-    border-bottom: 1px solid #555;
-  }
-
-  tr:nth-child(even) {
-    background-color: #656565;
-  }
+ol, ul {
+  list-style: none;
 }
 
 
-
+//*****************************************************
 
 //
-// INTRO
+// Intro
 //
+
+.intro-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: .7;
+  @include background(radial-gradient(60% 50%, ellipse closest-corner, #646464 1%, rgba(0, 0, 0, .3) 100%));
+}
+
 
 .intro {
+  background: url('//images.unsplash.com/photo-1456428199391-a3b1cb5e93ab');
   background-size: cover;
+
   height: 100%;
   position: relative;
   text-align: center;
@@ -88,6 +71,7 @@ table {
   z-index: 30;
 
   h2 {
+    color: #fff;
     font-size: 55px;
     font-weight: normal;
     line-height: 1.3em;
@@ -95,6 +79,7 @@ table {
   }
 
   p {
+    color: rgba(255, 255, 255, .7);
     display: block;
     font-size: 20px;
     font-weight: normal;
@@ -106,47 +91,190 @@ table {
 .intro-inner {
   bottom: 0;
   left: 0;
-  margin-top: 100px;
   position: absolute;
   right: 0;
   top: 0;
+
+  span {
+    position: relative;
+  }
 }
 
 .intro-pitch-inner {
   display: table-cell;
-  padding: 20px;
   vertical-align: middle;
+
+  h2 {
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
-// Added to sortable tables
-#table-stats th:hover {
-  cursor: pointer;
-  opacity: .6;
+.name {
+  span {
+    // Make the hyphen look good.
+    padding-left: 2px;
+  }
+}
+
+.subtext {
+  color: rgba(255, 255, 255, .36);
+  display: block;
+  padding-top: 20px;
+  text-decoration: none;
 }
 
 
-.success-colour,
-.default-colour {
-  border-left: 1px solid #fff;
+//******************************************************
+
+//
+// Sections
+//
+
+.section {
+  overflow: hidden;
+  padding: 75px 5% 55px;
+  text-align: center;
+  border-bottom: 1px solid #efefef;
+
+  .description {
+    padding-bottom: 10px;
+  }
+
+  h3 {
+    color: #4b514b;
+    font-size: 30px;
+    font-weight: normal;
+    margin-bottom: 1em;
+    padding: 0 5%;
+  }
+
+  code {
+    line-height: 1.35;
+  }
 }
 
-.success-colour {
-  color: #8fff5a;
+//*****************************************************
+
+//
+// Maps
+//
+
+.zones:first-child {
+  display: block;
 }
 
-.default-colour {
-  color: #fff;
+.zones {
+  display: none;
+  list-style: none;
+
+  li {
+    display: inline-block;
+    height: 225px;
+    margin: 15px 22px;
+    width: 300px;
+
+    a {
+      background-size: contain;
+      border-radius: 5px;
+      color: #aaa;
+      display: table;
+      font-size: 12px;
+      height: 225px;
+      position: relative;
+      text-decoration: none;
+      text-transform: uppercase;
+      width: 300px;
+    }
+
+    .details {
+      line-height:1.4;
+    }
+  }
 }
 
+
+//*****************************************************
+
+//
+// Tags
+//
+
+.tags {
+  list-style: none;
+  margin: 1.4em auto 0;
+  width: 80%;
+
+  li {
+    background-color: rgba(0, 0, 0, .2);
+    border-radius: 5px;
+    color: rgba(255, 255, 255, .65);
+    display: inline-block;
+    font-size: 20px;
+    line-height: 100%;
+    margin: 4px 5px 0;
+    padding: 6px 0;
+    position: relative;
+
+    a {
+      color: rgba(255, 255, 255, .65);
+      padding: 10px;
+      text-decoration: none;
+    }
+  }
+
+  li:hover {
+    background-color: rgba(0, 0, 0, .5);
+    cursor: pointer;
+  }
+}
+
+
+//*****************************************************
+
+//
+// Footer
+//
+
+.footer {
+  background-color: #fff;
+  color: #777;
+  padding: 45px 20px;
+
+  a {
+    border-bottom: 2px solid #b1b1b1;
+    color: #ea4c89;
+    display: inline-block;
+    height: 20px;
+    text-decoration: none;
+  }
+
+  p {
+    padding-top: 20px;
+  }
+}
+
+
+//*****************************************************
+
+//
 // Mobile
-@media (max-width: 500px) {
+//
+
+@media only screen and (max-width: 780px) {
+
   html,
   body,
   #save-form,
   .intro,
   .intro-pitch {
     height: auto;
-    margin: 0;
   }
 
   .intro-pitch {
@@ -155,7 +283,6 @@ table {
 
   .intro-pitch-inner {
     display: block;
-    padding: 5px;
   }
 
   .intro-pitch p {
@@ -167,22 +294,47 @@ table {
   .intro-inner {
     bottom: auto;
     left: auto;
+    padding: 40px 0;
     position: relative;
     right: auto;
     top: auto;
   }
 
   .intro-pitch h2 {
-    font-size: 30px;
-    padding: 0;
+    font-size: 19px;
+    margin-top: 1em;
   }
 
-  table {
-    font-size: 11px;
+  .tags li {
+    font-size: 12px;
+  }
 
-    th,
-    td {
-      padding: 3px;
+  .section h3 {
+    font-size: 25px;
+    margin-bottom: .4em;
+  }
+
+  .section {
+    padding: 45px 5% 40px !important;
+
+    .zones li {
+      height: 175px;
+      margin-top: 75px;
+      width: 233px;
+
+      a {
+        height: 175px;
+        width: 233px;
+      }
+    }
+  }
+
+  .footer {
+    padding-top: 10px;
+
+    p {
+      line-height: 1.6em;
+      font-size: 15px;
     }
   }
 }

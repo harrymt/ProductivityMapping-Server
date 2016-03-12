@@ -13,6 +13,8 @@
     $apps_str = ""; foreach($apps as $key => $value) { $apps_str .= "$key : $value<br>"; }
 ?>
 
-<h1>Apps</h1>
-<p>Top 3 most popular blocked Apps</p>
-<code><?= $apps_str ?></code>
+<div class="section" id="apps">
+    <h3>Apps</h3>
+    <p class="description">Top 3 most popular blocked Apps</p>
+    <code><?= $apps_str ?></code>
+</div><!-- /.section -->

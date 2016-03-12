@@ -13,6 +13,8 @@
     $keywords_str = ""; foreach($keywords as $key => $value) { $keywords_str .= "$key : $value<br>"; }
 ?>
 
-<h1>Keywords</h1>
-<p>Top 3 keywords used.</p>
-<code><?= $keywords_str ?></code>
+<div class="section" id="keywords">
+    <h3>Keywords</h3>
+    <p class="description">Top 3 keywords used.</p>
+    <code><?= $keywords_str ?></code>
+</div><!-- /.section -->

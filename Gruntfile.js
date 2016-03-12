@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+    'use strict';
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json')
@@ -9,8 +10,12 @@ module.exports = function (grunt) {
         sass: {
             dist: {
                 options: {
-                    style: 'compressed'
+                    style: 'compressed',
+
+                    loadPath: require('node-bourbon').includePaths
+
                 },
+
                 files: {
                     'css/style.css': 'scss/style.scss'
                 }
@@ -23,7 +28,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: ['js/jquery.min.js', 'js/app.js'],
-                dest: 'js/main.min.js'
+                dest: 'js/built/main.min.js'
             }
         },
 
@@ -33,7 +38,7 @@ module.exports = function (grunt) {
             },
             my_target: {
                 files: {
-                    'js/main.min.js': ['js/main.min.js']
+                    'js/built/main.min.js': ['js/built/main.min.js']
                 }
             }
         },
@@ -41,7 +46,7 @@ module.exports = function (grunt) {
         watch: {
             css: {
                 files: ['scss/*.scss'],
-                tasks: ['sass'],
+                tasks: ['default'],
                 options: {
                     spawn: false
                 }
@@ -49,17 +54,16 @@ module.exports = function (grunt) {
 
             javascript: {
                 files: ['js/*.js'],
-                tasks: ['concat']
+                tasks: ['default']
             }
         }
+
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat'); // Concatenate JS
     grunt.loadNpmTasks('grunt-contrib-uglify'); // Minify JS
     grunt.loadNpmTasks('grunt-contrib-sass'); // Process Sass files
     grunt.loadNpmTasks('grunt-contrib-watch'); // On file update, do task
-    grunt.loadNpmTasks('grunt-serve'); // Local server
 
-    grunt.registerTask('default', ['concat', 'sass']);
-
+    grunt.registerTask('default', ['concat', 'uglify', 'sass']);
 };
