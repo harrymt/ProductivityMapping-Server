@@ -18,9 +18,7 @@
         foreach($zone as $key => $value) { $str .= "$key : $value<br>"; } $str .= "<br>";
         return $str;
     }
-
 ?>
-
 
 <div class="section" id="maps">
     <h3>Maps</h3>

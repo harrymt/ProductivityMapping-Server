@@ -27,7 +27,11 @@ module.exports = function (grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['js/jquery.min.js', 'js/app.js'],
+                src: [
+                    'js/d3.min.js',
+                    'js/d3.layout.cloud.js',
+                    'js/app.js'
+                ],
                 dest: 'js/built/main.min.js'
             }
         },
