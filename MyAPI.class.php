@@ -53,7 +53,9 @@ class MyAPI extends API
                 // /status/time/
                 //
                 if($arguments[0] == "time") {
-                    return new Response_Wrapper(time());
+                    date_default_timezone_set('GMT');
+                    $st = new DateTime();
+                    return new Response_Wrapper($st->format('H:i:s'));
                 }
             }
 
