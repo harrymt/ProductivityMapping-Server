@@ -10,8 +10,24 @@ require_once 'RequestUtil.class.php';
 
 <?php
 
-// Jubilee campus 52.9525193,-1.1857491
-    $zone_lat = "52.9525193"; $zone_lng = "-1.1857491"; $zone_radius = "10";
+// See if url has lat lng and radius query strings in
+    $query = $_SERVER["QUERY_STRING"];
+    if($query != NULL) {
+        $pieces = explode("&", $_SERVER["QUERY_STRING"]);
+        $location = array();
+        foreach($pieces as $piece) {
+            $parts = explode("=", $piece);
+            $location[$parts[0]] = $parts[1];
+        }
+    } else {
+        // Fallback, if no query strings are provided
+        // Jubilee campus 52.953221 | -1.187199 | 10
+        $location['lat'] = 52.953221;
+        $location['lng'] = -1.187199;
+        $location['radius'] = 10;
+    }
+
+    $zone_lat = $location['lat']; $zone_lng = $location['lng']; $zone_radius = $location['radius'];
     $zones = RequestUtil::get("/zones/3/$zone_lat/$zone_lng/$zone_radius");
 
     $zone_pairs = array();
