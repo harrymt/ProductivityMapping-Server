@@ -10,7 +10,7 @@
 
 <?php
     $apps = RequestUtil::get('/apps/3');
-    $apps_str = ""; foreach($apps as $key => $value) { $apps_str .= "$key : $value<br>"; }
+    $apps_str = ""; foreach($apps as $key => $value) { $apps_str .= "$key used by $value users<br>"; }
 
     $app_pairs = array();
     // Print out the words as a json object { text: "", size: "" }

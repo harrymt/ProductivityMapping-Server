@@ -5,13 +5,25 @@
  * Date: 12/03/2016
  * Time: 16:49
  */
-    require_once 'RequestUtil.class.php';
+require_once 'RequestUtil.class.php';
 ?>
 
 <?php
 
-    $zone_lat = "40.3"; $zone_lng = "-1.0"; $zone_radius = "10";
+// Jubilee campus 52.9525193,-1.1857491
+    $zone_lat = "52.9525193"; $zone_lng = "-1.1857491"; $zone_radius = "10";
     $zones = RequestUtil::get("/zones/3/$zone_lat/$zone_lng/$zone_radius");
+
+    $zone_pairs = array();
+    foreach($zones as $zone) {
+        array_push($zone_pairs, array(
+            "center" => array(
+                "lat" => (float) $zone->lat,
+                "lng" => (float) $zone->lng
+            ),
+            "radius" => (float) $zone->radius
+        ));
+    }
 
     function makeZoneObject($zone) {
         $str = "";
@@ -19,6 +31,9 @@
         return $str;
     }
 ?>
+
+<script>var phpZones = <?= json_encode($zone_pairs); ?>;</script>
+
 
 <div class="section" id="maps">
     <h3>Maps</h3>
@@ -33,10 +48,14 @@
                     <?= makeZoneObject($zone); ?>
                 </span>
                 <i class="fa fa-heart"></i>
+
             </li>
 
             <?php } ?>
 
         </ul>
     </div> <!-- ./needed div -->
+
+    <div style="height: 400px;" id="map"></div>
+
 </div> <!-- ./work -->

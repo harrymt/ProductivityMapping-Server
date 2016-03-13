@@ -1,7 +1,10 @@
+//
+// D3 Word cloud for keywords
+//
 var fill = d3.scale.category20();
 
 d3.layout.cloud().size([300, 300])
-    .words(keywords)
+    .words(phpKeywords)
     .rotate(0)
     .font("Arial")
     .fontSize(function(d) { return d.size; })
@@ -25,4 +28,46 @@ function draw(words) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
         })
         .text(function(d) { return d.text; });
+}
+
+
+
+//
+// Google Maps
+//
+
+/**
+ * Callback to the google maps javascript file loaded.
+ */
+function initMap() {
+
+    // Fallback if the api fails
+    var centerPoint = {lat: 37.090, lng: -95.712};
+    if(phpZones.length > 0) {
+        centerPoint = phpZones[0].center;
+    }
+
+    // Create the map.
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 18,
+        center: centerPoint,
+        scrollwheel: false,
+        disableDoubleClickZoom: true
+    });
+
+    // Construct the circle for each value in citymap.
+    // Note: We scale the area of the circle based on the population.
+    for (var zone in phpZones) {
+        // Add the circle for this city to the map.
+        var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: phpZones[zone].center,
+            radius: phpZones[zone].radius
+        });
+    }
 }

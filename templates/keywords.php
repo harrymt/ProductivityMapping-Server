@@ -10,7 +10,7 @@
 
 <?php
     $keywords = RequestUtil::get('/keywords/3');
-    $keywords_str = ""; foreach($keywords as $key => $value) { $keywords_str .= "$key : $value<br>"; }
+    $keywords_str = ""; foreach($keywords as $key => $value) { $keywords_str .= "'$key' used by $value users<br>"; }
 
     $word_pairs = array();
     // Print out the words as a json object { text: "", size: "" }
@@ -24,7 +24,7 @@
 
 ?>
 
-<script>var keywords = <?= json_encode($word_pairs); ?>;</script>
+<script>var phpKeywords = <?= json_encode($word_pairs); ?>;</script>
 
 <div class="section" id="keywords">
     <h3>Keywords</h3>
