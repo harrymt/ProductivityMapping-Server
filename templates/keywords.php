@@ -10,7 +10,7 @@
 
 <?php
     $keywords = RequestUtil::get('/keywords/3');
-    $keywords_str = ""; foreach($keywords as $key => $value) { $keywords_str .= "'$key' used by $value users<br>"; }
+    $keywords_str = ""; foreach($keywords as $key => $value) { $keywords_str .= "'$key' being used in $value zones<br>"; }
 
     $word_pairs = array();
     // Print out the words as a json object { text: "", size: "" }
