@@ -229,8 +229,7 @@ class MyAPI extends API
 
             // Write to database
             $adapter = new DatabaseAdapater();
-            $success_message = "Written zone '" . $zone_object->{ZoneTableSchema::name}
-                . "' from user " . $zone_object->{ZoneTableSchema::user_id} . " to database.";
+            $success_message = "Sent zone '" . $zone_object->{ZoneTableSchema::name} . "' successfully.";
             $database_message = $adapter->writeZone($zone_object);
             if($database_message == null) {
                 return new Response_Wrapper($success_message); // Force it to be JSON
