@@ -1,10 +1,13 @@
 <?php
 
 require_once 'API.class.php';
-require_once 'DatabaseAdapater.class.php';
+require_once 'DatabaseAdapter.class.php';
 require_once 'ZoneTableSchema.class.php';
 
 /**
+ * Class MyAPI.
+ *
+ * Handles the processing of each API endpoint listed below.
  *
  * GET /status/
  * GET /status/date/
@@ -23,18 +26,27 @@ require_once 'ZoneTableSchema.class.php';
 */
 class MyAPI extends API
 {
+    /**
+     * MyAPI constructor.
+     *
+     * @param $request string API request.
+     * @param $query_string string query string parameters.
+     */
     public function __construct($request, $query_string) {
         parent::__construct($request, $query_string);
     }
 
 
     /**
-     * Gets the status of the API, returns OK or BAD.
+     * Gets the status of the API.
      * Can be used as a test call to see if API is working.
      *
      * GET /status/
      * GET /status/date/
      * GET /status/time/
+     *
+     * @param $arguments string array choice of status output.
+     * @return Response_Wrapper api response with success status.
      */
     public function status($arguments) {
         if ($this->method == 'GET') {
@@ -69,11 +81,13 @@ class MyAPI extends API
     }
 
     /**
-     * Get popular keywords.
+     * Gets a number of the top used keywords near a location.
      *
      * GET /keywords/number/
      * GET /keywords/number/lat/lng/radius/
      *
+     * @param $arguments string array keyword selection.
+     * @return Response_Wrapper api response with success status.
      */
     public function keywords($arguments) {
         if ($this->method == 'GET') {
@@ -87,7 +101,7 @@ class MyAPI extends API
                 && is_numeric($arguments[3]) // radius
                 ) {
 
-                $adapter = new DatabaseAdapater();
+                $adapter = new DatabaseAdapter();
                 $number = $this->get_numeric($arguments[0]);
                 $lat = $this->get_numeric($arguments[1]);
                 $lng = $this->get_numeric($arguments[2]);
@@ -99,7 +113,7 @@ class MyAPI extends API
             // /keywords/number/
             //
             if($arguments >= 1 && is_numeric($arguments[0])) {
-                $adapter = new DatabaseAdapater();
+                $adapter = new DatabaseAdapter();
                 $number = $this->get_numeric($arguments[0]);
                 return new Response_Wrapper($adapter->getKeywords($number));
             }
@@ -114,11 +128,13 @@ class MyAPI extends API
     }
 
     /**
-     * Get popular apps.
+     * Gets a number of the top used apps near a location.
      *
      * GET /apps/number/
      * GET /apps/number/lat/lng/radius/
      *
+     * @param $arguments string array app selection.
+     * @return Response_Wrapper api response with success status.
      */
     public function apps($arguments) {
         if ($this->method == 'GET') {
@@ -132,7 +148,7 @@ class MyAPI extends API
                 && is_numeric($arguments[3]) // radius
                 ) {
 
-                $adapter = new DatabaseAdapater();
+                $adapter = new DatabaseAdapter();
                 $number = $this->get_numeric($arguments[0]);
                 $lat = $this->get_numeric($arguments[1]);
                 $lng = $this->get_numeric($arguments[2]);
@@ -144,7 +160,7 @@ class MyAPI extends API
             // /apps/number/
             //
             if($arguments >= 1 && is_numeric($arguments[0])) {
-                $adapter = new DatabaseAdapater();
+                $adapter = new DatabaseAdapter();
                 $number = $this->get_numeric($arguments[0]);
                 return new Response_Wrapper($adapter->getApps($number));
             }
@@ -159,10 +175,12 @@ class MyAPI extends API
     }
 
     /**
-     * Get zones near a location.
+     * Gets a number of zones near a location.
      *
      * GET /zones/number/lat/lng/radius/
      *
+     * @param $arguments string array of zone number and location.
+     * @return Response_Wrapper api response with success status.
      */
     public function zones($arguments) {
         if ($this->method == 'GET') {
@@ -176,7 +194,7 @@ class MyAPI extends API
                 && is_numeric($arguments[3]) // radius
                 ) {
 
-                $adapter = new DatabaseAdapater();
+                $adapter = new DatabaseAdapter();
                 $number = $this->get_numeric($arguments[0]);
                 $lat = $this->get_numeric($arguments[1]);
                 $lng = $this->get_numeric($arguments[2]);
@@ -197,25 +215,31 @@ class MyAPI extends API
     }
 
     /**
-     * Saves a zone to the zone database
+     * Saves a zone to the database.
      *
      * POST /zone/
+     *
      * Payload:
      * {
-     *  user_id: 123,
-     *  id: 123,
-     *  zone: name,
-     *  radius: 123.0,
-     *  lat: 123.0,
-     *  lng: 123.0,
-     *  blockingApps: [
-     *    "facebook.com",
-     *    "google.com"
-     *  ],
-     *  keywords: [
-     *    "harry"
-     *  ]
+     *    user_id: 123,
+     *    id: 123,
+     *    zone: name,
+     *    radius: 123.0,
+     *    lat: 123.0,
+     *    lng: 123.0,
+     *    blockingApps:
+     *    [
+     *        "facebook.com",
+     *        "google.com"
+     *    ],
+     *    keywords:
+     *    [
+     *        "harry"
+     *    ]
      * }
+     *
+     * @param $arguments string array unused.
+     * @return Response_Wrapper api response with success status.
      */
     public function zone($arguments) {
         if ($this->method == 'POST') {
@@ -228,7 +252,7 @@ class MyAPI extends API
             }
 
             // Write to database
-            $adapter = new DatabaseAdapater();
+            $adapter = new DatabaseAdapter();
             $success_message = "Sent zone '" . $zone_object->{ZoneTableSchema::name} . "' successfully.";
             $database_message = $adapter->writeZone($zone_object);
             if($database_message == null) {
@@ -241,10 +265,10 @@ class MyAPI extends API
     }
 
     /**
-     * Validate the payload zone data.
+     * Validate the zone payload data.
      *
-     * @param $payload json passed with POST request.
-     * @return mixed|null|string zone object
+     * @param $payload string passed with POST request.
+     * @return mixed|null|string zone object.
      */
     private function deSerializeZone($payload) {
         $zone_object = json_decode($payload);
@@ -275,7 +299,6 @@ class MyAPI extends API
 
         return $zone_object;
     }
-
 }
 
 ?>

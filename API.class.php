@@ -1,38 +1,58 @@
 <?php
 
-
+/**
+ * Class API.
+ *
+ * Handles the initial sorting out and final response of API calls,
+ * searches any sub classes for methods for API endpoints.
+ *
+ * Code based on tutorial code and heavily modified.
+ *
+ * http://coreymaynard.com/blog/creating-a-restful-api-with-php/
+ *
+ */
 abstract class API
 {
     /**
      * Property: method
+     *
      * The HTTP method this request was made in, either GET, POST, PUT or DELETE
      */
     protected $method = '';
+
     /**
      * Property: endpoint
+     *
      * The Model requested in the URI. eg: /files
      */
     protected $endpoint = '';
+
     /**
      * Property: args
+     *
      * Any additional URI components after the endpoint and verb have been removed, in our
      * case, an integer ID for the resource. eg: /<endpoint>/<verb>/<arg0>/<arg1>
      * or /<endpoint>/<arg0>
      */
     protected $args = Array();
+
     /**
      * Property: file
-     * Stores the input of the PUT request
+     *
+     * Stores the input of the POST request
      */
     protected $file = Null;
+
      /**
      * Property: api_version
+      *
      * States what version of the API we are using
      */
     protected $api_version = '';
 
     /**
      * Constructor: __construct
+     *
      * Allow for CORS, assemble and pre-process the data
      */
     public function __construct($request, $query_string) {
@@ -41,6 +61,7 @@ abstract class API
         $value = $pieces[0];
         $key = $pieces[1];
 
+        // Check if the user has the correct API key
         if($value != "apikey" || $key != Environment_variable::$API_KEY) {
             header("HTTP/1.1 " . 405 . " " . $this->_requestStatus(405));
             throw new Exception("Wrong api key");
@@ -51,7 +72,7 @@ abstract class API
         header("Content-Type: application/json");
 
         // $request: "/v1/status/time"
-        $this->args = explode('/', trim($request, '/')); // atm set to ["v1", "status", "time"]
+        $this->args = explode('/', trim($request, '/')); // set to ["v1", "status", "time"]
         $this->api_version = array_shift($this->args); // "v1"
         $this->endpoint = array_shift($this->args); // "status"
         // Now $this->args is set to ["time"]
@@ -83,6 +104,11 @@ abstract class API
         }
     }
 
+    /**
+     * Process the API and execute the correct method.
+     *
+     * @return string The API response.
+     */
     public function processAPI() {
         // Checks to see if api endpoint exists
         if (method_exists($this, $this->endpoint)) {
@@ -95,11 +121,24 @@ abstract class API
         return $this->_response("No Endpoint: $this->endpoint" , 404);
     }
 
+    /**
+     * Encode the response and send status code.
+     *
+     * @param $data string response data.
+     * @param int $status Status code.
+     * @return string Reponse with status code.
+     */
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
         return json_encode(Array("response" => $data));
     }
 
+    /**
+     * Clean the inputs from POST or GET requests.
+     *
+     * @param $data array of params.
+     * @return array|string Clean array of params
+     */
     private function _cleanInputs($data) {
         $clean_input = Array();
         if (is_array($data)) {
@@ -112,6 +151,12 @@ abstract class API
         return $clean_input;
     }
 
+    /**
+     * Get a user friendly status code.
+     *
+     * @param $code int status code.
+     * @return mixed array showing friendly status code.
+     */
     private function _requestStatus($code) {
         $status = array(
             200 => 'OK',
@@ -125,7 +170,7 @@ abstract class API
     /**
      * Converts a string to a numeric value.
      *
-     * @param  String $str The String value to convert.
+     * @param String $str The String value to convert.
      * @return int or float Output value, can be int or float.
      */
     public function get_numeric($str) {
@@ -134,15 +179,24 @@ abstract class API
       }
       return 0;
     }
-
 }
 
-
+/**
+ * Class Response_Wrapper.
+ *
+ * A wrapper around an API response.
+ */
 class Response_Wrapper
 {
     public $code = 0;
     public $response = "";
 
+    /**
+     * Response_Wrapper constructor.
+     *
+     * @param string $r the response string.
+     * @param int $c the status code
+     */
     public function __construct($r, $c = 200) {
         $this->response = $r;
         $this->code = $c;

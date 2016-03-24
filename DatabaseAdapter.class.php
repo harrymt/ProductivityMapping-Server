@@ -3,16 +3,25 @@
 require_once '../Environment_variable.class.php';
 require_once 'ZoneTableSchema.class.php';
 
-class DatabaseAdapater
+/**
+ * Class DatabaseAdapter.
+ *
+ * Handles the reading and writing to the database.
+ */
+class DatabaseAdapter
 {
 
-    public function __construct() {
-    }
+    /**
+     * DatabaseAdapter constructor.
+     *
+     * Empty.
+     */
+    public function __construct() {}
 
     /**
      * Gets the top $number of popular keywords.
      *
-     * @param  int $number Number of keywords to get.
+     * @param int $number Number of keywords to get.
      * @return String array Keywords.
      */
     public function getKeywords($number) {
@@ -84,15 +93,15 @@ class DatabaseAdapater
     /**
      * Gets the top $number of popular keywords near a location.
      *
-     * @param  int $number  Number of keywords to get.
-     * @param  float $lat    Latitude of location
-     * @param  float $lng    Longitude of location
-     * @param  float $radius Radius from location.
+     * @param int $number Number of keywords to get.
+     * @param float $lat Latitude of location
+     * @param float $lng Longitude of location
+     * @param float $radius Radius from location.
      * @return String array Keywords.
      */
     public function getKeywordsNearLocation($number, $lat, $lng, $radius) {
 
-        $sql = $this->getSQLHaversineFormula($number, $lat, $lng, $radius);
+        $sql = $this->makeHaversineFormulaSQL($number, $lat, $lng, $radius);
 
         $error_string = null;
         // Connect to the database
@@ -140,7 +149,7 @@ class DatabaseAdapater
     /**
      * Gets the top $number of popular apps.
      *
-     * @param  int $number Number of apps to get.
+     * @param int $number Number of apps to get.
      * @return String array Apps.
      */
     public function getApps($number) {
@@ -191,15 +200,15 @@ class DatabaseAdapater
     /**
      * Gets the top $number of popular apps near a location.
      *
-     * @param  int $number  Number of apps to get.
-     * @param  float $lat    Latitude of location
-     * @param  float $lng    Longitude of location
-     * @param  float $radius Radius from location.
+     * @param int $number Number of apps to get.
+     * @param float $lat Latitude of location
+     * @param float $lng Longitude of location
+     * @param float $radius Radius from location.
      * @return String array Apps.
      */
     public function getAppsNearLocation($number, $lat, $lng, $radius) {
 
-        $sql = $this->getSQLHaversineFormula($number, $lat, $lng, $radius);
+        $sql = $this->makeHaversineFormulaSQL($number, $lat, $lng, $radius);
 
         $error_string = null;
         // Connect to the database
@@ -243,34 +252,19 @@ class DatabaseAdapater
         return $apps_array;
     }
 
-    private function getSQLHaversineFormula($number, $lat, $lng, $radius) {
-        // SQL query to return number near location, using The Haversine formula!
-        // http://en.wikipedia.org/wiki/Haversine_formula
-
-        $miles_number = 3959;
-        $kilometers_number = 6371;
-
-        $sql = "SELECT " . ZoneTableSchema::name . ", ". ZoneTableSchema::lat . ", " . ZoneTableSchema::lng . ", " . ZoneTableSchema::radius . ", " . ZoneTableSchema::blockingApps . ", " . ZoneTableSchema::keywords . ",
-                ( ". $kilometers_number . " * acos( cos( radians(" . $lat . ") ) * cos( radians( " . ZoneTableSchema::lat . " ) )
-                * cos( radians( " . ZoneTableSchema::lng . " ) - radians(" . $lng . ") ) + sin( radians(" . $lat . ") )
-                * sin( radians( " . ZoneTableSchema::lat . " ) ) ) )
-                AS distance FROM " . ZoneTableSchema::table_name . " HAVING distance < " . $radius . " ORDER BY distance LIMIT 0 , " . $number . ";";
-
-        return $sql;
-    }
 
     /**
      * Gets the top $number of zones near a location.
      *
-     * @param  int $number  Number of zones to get.
-     * @param  float $lat    Latitude of location
-     * @param  float $lng    Longitude of location
-     * @param  float $radius Radius from location.
+     * @param int $number Number of zones to get.
+     * @param float $lat Latitude of location
+     * @param float $lng Longitude of location
+     * @param float $radius Radius from location.
      * @return String array Zone.
      */
     public function getZonesNearLocation($number, $lat, $lng, $radius) {
 
-        $sql = $this->getSQLHaversineFormula($number, $lat, $lng, $radius);
+        $sql = $this->makeHaversineFormulaSQL($number, $lat, $lng, $radius);
 
         $error_string = null;
         // Connect to the database
@@ -321,10 +315,10 @@ class DatabaseAdapater
     }
 
     /**
-     * Writes the zone + the user id to database.
+     * Writes the zone and the user id to database.
      *
-     * @param $zone_object taken from payload
-     * @return null on succcess, error string on failure.
+     * @param $zone_object ZoneTableSchema taken from payload.
+     * @return null on success, error string on failure.
      */
     public function writeZone($zone_object)
     {
@@ -384,6 +378,31 @@ class DatabaseAdapater
         // success
         return null;
     }
+
+    /**
+     * Use Haversine' Formula to return a number of zones near a location in KM.
+     *
+     * http://en.wikipedia.org/wiki/Haversine_formula
+     *
+     * @param $number int Number of zones to get.
+     * @param $lat float Latitude.
+     * @param $lng float Longitude.
+     * @param $radius float
+     * @return string SQL to get the number of zones near a location.
+     */
+    private function makeHaversineFormulaSQL($number, $lat, $lng, $radius) {
+        $miles_number = 3959;
+        $kilometers_number = 6371;
+
+        $sql = "SELECT " . ZoneTableSchema::name . ", ". ZoneTableSchema::lat . ", " . ZoneTableSchema::lng . ", " . ZoneTableSchema::radius . ", " . ZoneTableSchema::blockingApps . ", " . ZoneTableSchema::keywords . ",
+                ( ". $kilometers_number . " * acos( cos( radians(" . $lat . ") ) * cos( radians( " . ZoneTableSchema::lat . " ) )
+                * cos( radians( " . ZoneTableSchema::lng . " ) - radians(" . $lng . ") ) + sin( radians(" . $lat . ") )
+                * sin( radians( " . ZoneTableSchema::lat . " ) ) ) )
+                AS distance FROM " . ZoneTableSchema::table_name . " HAVING distance < " . $radius . " ORDER BY distance LIMIT 0 , " . $number . ";";
+
+        return $sql;
+    }
+
 }
 
 ?>

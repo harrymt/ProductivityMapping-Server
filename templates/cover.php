@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: harrymt
- * Date: 12/03/2016
- * Time: 16:48
- */
     require_once 'RequestUtil.class.php';
 ?>
 

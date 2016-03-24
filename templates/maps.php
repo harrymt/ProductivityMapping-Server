@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: harrymt
- * Date: 12/03/2016
- * Time: 16:49
- */
-require_once 'RequestUtil.class.php';
+    require_once 'RequestUtil.class.php';
 ?>
 
 <?php
 
-// See if url has lat lng and radius query strings in
+    // See if url has lat lng and radius query strings in
     $query = $_SERVER["QUERY_STRING"];
     if($query != NULL) {
         $pieces = explode("&", $_SERVER["QUERY_STRING"]);

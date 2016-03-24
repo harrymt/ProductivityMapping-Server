@@ -1,17 +1,5 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: harrymt
- * Date: 12/03/2016
- * Time: 16:46
- */
-?>
 <meta charset="UTF-8">
 <title>API front end</title>
-
-<!-- Favicon -->
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
 
 <!-- Description -->
 <meta name="description" content="">

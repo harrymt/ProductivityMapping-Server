@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Class ZoneTable
+ * Class ZoneTableSchema.
+ *
  * Describes the Zone table name and column headers in the database.
  */
 abstract class ZoneTableSchema
@@ -17,6 +18,11 @@ abstract class ZoneTableSchema
     const blockingApps = "blockingApps";
     const keywords = "keywords";
 
+    /**
+     * Creates the SQL CREATE TABLE string.
+     *
+     * @return string When ran in SQL the Zone Table will be created.
+     */
     public static function make_sql_table_string() {
         return "CREATE TABLE if not exists " . ZoneTableSchema::table_name . "
             (

@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: harrymt
- * Date: 12/03/2016
- * Time: 17:42
- */
-?>
 <div class="section footer">
     <p>
         &copy; <script>document.write(new Date().getFullYear());</script>

@@ -1,9 +1,5 @@
 <?php
-/**
- *
- */
     require_once '../Environment_variable.class.php';
-
 ?>
 
 <!DOCTYPE html>

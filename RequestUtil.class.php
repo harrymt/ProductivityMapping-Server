@@ -3,10 +3,9 @@
 require_once '../Environment_variable.class.php';
 
 /**
- * Created by PhpStorm.
- * User: harrymt
- * Date: 12/03/2016
- * Time: 16:32
+ * Class ZoneTableSchema.
+ *
+ * Utility Class to help with API requests.
  */
 class RequestUtil
 {
@@ -31,7 +30,6 @@ class RequestUtil
 
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
