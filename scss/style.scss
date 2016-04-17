@@ -45,12 +45,12 @@ ol, ul {
   right: 0;
   bottom: 0;
   opacity: .7;
-  @include background(radial-gradient(60% 50%, ellipse closest-corner, #646464 1%, rgba(0, 0, 0, .3) 100%));
+  @include background(radial-gradient(60% 50%, ellipse closest-corner, #646464 1%, rgba(0, 0, 0, .8) 100%));
 }
 
 
 .intro {
-  background: url('//images.unsplash.com/photo-1456428199391-a3b1cb5e93ab');
+  background: url('//images.unsplash.com/photo-1429051781835-9f2c0a9df6e4');
   background-size: cover;
 
   height: 30%;
@@ -263,6 +263,10 @@ ol, ul {
   .intro,
   .intro-pitch {
     height: auto;
+  }
+
+  .intro {
+    height: 50%;
   }
 
   .intro-pitch {
