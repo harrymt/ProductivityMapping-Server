@@ -8,9 +8,10 @@
 
         <div class="intro-pitch">
             <div class="intro-pitch-inner">
-                <p class="name">Harry Mumford<span>&#45;</span>Turner</p>
-                <h2><a href="http://www.nottingham.ac.uk/" target="_blank">UoN</a> Study Mapper</span></h2>
-                <a class="subtext"><?= RequestUtil::get('/status/'); ?> at <?= RequestUtil::get('/status/time'); ?></a>
+                <p class="name">Study Mapper</p>
+                <a class="subtext">A University of Nottingham project by Harry Mumford<span>&#45;</span>Turner</a>
+                <h2>Where's the most popular place to study near</h2>
+                <input type="text" placeholder="Location" class="focus" value="Jubilee Campus">
             </div>
         </div>
     </div>
