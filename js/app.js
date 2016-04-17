@@ -37,11 +37,11 @@ function draw(words) {
 //
 
 /**
- * Callback to the google maps javascript file loaded.
+ * Callback to the Google Maps Javascript file loaded.
  */
 function initMap() {
 
-    // Fallback if the api fails
+    // Fallback if the php API fails (should not happen)
     var centerPoint = {lat: 37.090, lng: -95.712};
     if(phpZones.length > 0) {
         centerPoint = phpZones[0].center;
@@ -49,16 +49,17 @@ function initMap() {
 
     // Create the map.
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 18,
+        zoom: 17,
         center: centerPoint,
         scrollwheel: false,
         disableDoubleClickZoom: true
     });
 
-    // Construct the circle for each value in citymap.
-    // Note: We scale the area of the circle based on the population.
+    // Add a marker at the searched location
+
+
+    // Add all the zones to the map
     for (var zone in phpZones) {
-        // Add the circle for this city to the map.
         var cityCircle = new google.maps.Circle({
             strokeColor: '#FF0000',
             strokeOpacity: 0.8,

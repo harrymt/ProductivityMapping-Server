@@ -53,7 +53,7 @@ ol, ul {
   background: url('//images.unsplash.com/photo-1456428199391-a3b1cb5e93ab');
   background-size: cover;
 
-  height: 100%;
+  height: 30%;
   position: relative;
   text-align: center;
   width: 100%;
@@ -72,19 +72,18 @@ ol, ul {
 
   h2 {
     color: #fff;
-    font-size: 55px;
+    font-size: 45px;
     font-weight: normal;
     line-height: 1.3em;
-    padding: 0 10%;
+    padding: 1% 5%;
   }
 
   p {
     color: rgba(255, 255, 255, .7);
     display: block;
-    font-size: 20px;
+    font-size: 27px;
     font-weight: normal;
     line-height: 100%;
-    margin-bottom: 1.3em;
   }
 }
 
@@ -113,6 +112,20 @@ ol, ul {
     a:hover {
       text-decoration: underline;
     }
+  }
+
+  input{
+    display: block;
+    width: 70%;
+    margin-left: 15%;
+    padding: 15px 0 15px 12px;
+    background: rgba(0, 0, 0, .3);
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    border: 1px solid rgba(0, 0, 0, .3);
+    border-radius: 4px;
+    position: relative;
+    font-size: 24px;
   }
 }
 
@@ -158,6 +171,17 @@ ol, ul {
     line-height: 1.35;
   }
 }
+
+//*****************************************************
+
+//
+// Keywords and blocked apps
+//
+
+.perferences {
+  width: 100%;
+}
+
 
 //*****************************************************
 
@@ -247,6 +271,10 @@ ol, ul {
 
   .intro-pitch-inner {
     display: block;
+
+    input {
+      font-size: 15px;
+    }
   }
 
   .intro-pitch p {

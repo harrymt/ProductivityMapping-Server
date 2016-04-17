@@ -4,7 +4,7 @@
 
 <?php
     $apps = RequestUtil::get('/apps/3');
-    $apps_str = ""; foreach($apps as $key => $value) { $apps_str .= "$key being blocked in $value zones<br>"; }
+    $apps_str = ""; foreach($apps as $key => $value) { $apps_str .= "$key is blocked in $value zones<br>"; }
 
     $app_pairs = array();
     // Print out the words as a json object { text: "", size: "" }
@@ -19,8 +19,8 @@
 <script>var apps = <?= json_encode($app_pairs); ?>;</script>
 
 <div class="section" id="apps">
-    <h3>Apps</h3>
-    <p class="description">Top 3 most popular blocked Apps</p>
+    <h3>Most Popular Apps</h3>
+    <p class="description">The top 3 apps to block notifications used in the app.</p>
     <code><?= $apps_str ?></code>
-    <div class="js-app-cloud"></div>
+    <!-- <div class="js-app-cloud"></div> -->
 </div><!-- /.section -->

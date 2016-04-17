@@ -15,14 +15,16 @@
         }
     } else {
         // Fallback, if no query strings are provided
-        // Jubilee campus 52.953221 | -1.187199 | 10
+        // Jubilee campus 52.953221 | -1.187199 | 200
         $location['lat'] = 52.953221;
         $location['lng'] = -1.187199;
-        $location['radius'] = 10;
+        $location['radius'] = 200;
     }
 
+    $number_of_zones = 200;
+
     $zone_lat = $location['lat']; $zone_lng = $location['lng']; $zone_radius = $location['radius'];
-    $zones = RequestUtil::get("/zones/3/$zone_lat/$zone_lng/$zone_radius");
+    $zones = RequestUtil::get("/zones/$number_of_zones/$zone_lat/$zone_lng/$zone_radius");
 
     $zone_pairs = array();
     foreach($zones as $zone) {
@@ -46,26 +48,5 @@
 
 
 <div class="section" id="maps">
-    <h3>Maps</h3>
-    <p class="description">3 nearest Zones to <?= $zone_lat ?>,<?= $zone_lng ?> in radius of <?= $zone_radius ?> meters</p>
-    <div> <!-- needed div -->
-        <ul class="zones">
-
-            <?php foreach ($zones as $zone) { ?>
-
-            <li>
-                <span class="details">
-                    <?= makeZoneObject($zone); ?>
-                </span>
-                <i class="fa fa-heart"></i>
-
-            </li>
-
-            <?php } ?>
-
-        </ul>
-    </div> <!-- ./needed div -->
-
-    <div style="height: 400px;" id="map"></div>
-
-</div> <!-- ./work -->
+    <div style="height: 600px;" id="map"></div>
+</div> <!-- ./section -->

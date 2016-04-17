@@ -12,13 +12,20 @@
 
     <?php include('templates/maps.php'); ?>
 
-    <?php include('templates/keywords.php'); ?>
-
-    <?php include('templates/apps.php'); ?>
+    <table class="perferences">
+      <tr>
+        <td>
+          <?php include('templates/keywords.php'); ?>
+        </td>
+        <td>
+          <?php include('templates/apps.php'); ?>
+        </td>
+      </tr>
+    </table>
 
     <?php include('templates/footer.php'); ?>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= Environment_variable::$API_GOOGLE_KEY ?>&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= Environment_variable::$API_GOOGLE_KEY ?>&amp;callback=initMap"></script>
 
     <script src="js/built/main.min.js"></script>
 </body>
