@@ -11,7 +11,7 @@
                 <p class="name">Study Mapper</p>
                 <a class="subtext">A University of Nottingham project by Harry Mumford<span>&#45;</span>Turner</a>
                 <h2>Where's the most popular place to study near</h2>
-                <input type="text" placeholder="Location" class="focus" value="Jubilee Campus">
+                <input type="text" placeholder="Location" value="Jubilee Campus" readonly>
             </div>
         </div>
     </div>

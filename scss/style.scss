@@ -126,6 +126,10 @@ ol, ul {
     border-radius: 4px;
     position: relative;
     font-size: 24px;
+
+    &:hover {
+      cursor: not-allowed;
+    }
   }
 }
 
