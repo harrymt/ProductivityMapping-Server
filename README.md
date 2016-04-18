@@ -2,7 +2,7 @@
 
 The server side to Study Mapper. Links with the app component [Study Mapper](https://github.com/harrymt/ProductivityMapping)
  
-**Built for the University of Nottingham as a final year project.**
+**Built for the University of Nottingham as a final year BSc Computer Science project.**
 
 In order to build this project, you must place an `Environment_variable.class.php` in the outer directory with the following structure.
 This must contain a [Google Maps Javascript API key](https://developers.google.com/maps/signup) for the front end to be displayed.
